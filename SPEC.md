@@ -200,12 +200,12 @@ Mobile-first. All views are single-column, touch-friendly.
 +-----------------------------+
 | Classic Icelandic meatballs |
 +-----------------------------+
-| Servings:  [2] [4] [6] [8] |
+| Servings:  [2] [4] [6] [8]  |
 +-----------------------------+
 | Ingredients                 |
 | [ ] 500 g    ground beef    |
 | [ ] 1        egg            |
-| [ ] 1/2 dl   breadcrumbs   |
+| [ ] 1/2 dl   breadcrumbs    |
 | [ ] 1 tsp    salt           |
 +-----------------------------+
 | Steps                       |
