@@ -125,8 +125,8 @@ Self-hosted via Docker Compose.
 | title        | TEXT      | Not null                           |
 | description  | TEXT      |                                    |
 | servings     | INT       | Default/base serving count         |
-| prep_time    | TEXT      | e.g. "15 min"                      |
-| cook_time    | TEXT      | e.g. "30 min"                      |
+| prep_time    | TEXT      | Nullable. Optional — only shown/stored if user fills it in |
+| cook_time    | TEXT      | Nullable. Optional — only shown/stored if user fills it in |
 | tags         | TEXT[]    | PostgreSQL array                   |
 | ingredients  | JSONB     | Array of `{amount, unit, item}` objects. `amount` is a number (null if unquantified), `unit` is a string (empty if unitless) |
 | steps        | TEXT[]    | Ordered list of step strings       |
@@ -179,17 +179,14 @@ Mobile-first. All views are single-column, touch-friendly.
 +-----------------------------+
 | +-------------------------+ |
 | | Kjotbollar              | |
-| | 15 min prep - 30 min   | |
 | | #dinner #icelandic      | |
 | +-------------------------+ |
 | +-------------------------+ |
 | | Baguette      [!] Plan  | |
-| | 20 min prep - 25 min   | |
 | | #baking #bread          | |
 | +-------------------------+ |
 | +-------------------------+ |
 | | Hummus                  | |
-| | 10 min prep - 0 min    | |
 | | #starter #vegetarian    | |
 | +-------------------------+ |
 +-----------------------------+
@@ -201,8 +198,6 @@ Mobile-first. All views are single-column, touch-friendly.
 | < Kjotbollar                |
 +-----------------------------+
 | Classic Icelandic meatballs |
-|                             |
-| Prep: 15 min  Cook: 30 min  |
 +-----------------------------+
 | Servings:  [2] [4] [6] [8] |
 +-----------------------------+
@@ -235,8 +230,6 @@ Mobile-first. All views are single-column, touch-friendly.
 | |     Dough must rest     | |
 | |     overnight           | |
 | +-------------------------+ |
-|                             |
-| Prep: 20 min  Cook: 25 min  |
 |  ...                        |
 +-----------------------------+
 ```
@@ -266,8 +259,8 @@ Mobile-first. All views are single-column, touch-friendly.
 | +-------------------------+ |
 | |                         | |
 | +-------------------------+ |
-| Prep time      Cook time    |
-| +----------+  +----------+  |
+| [ ] Add prep/cook times     |
+| +----------+  +----------+  | <- appears when checked
 | | 15 min   |  | 30 min   |  |
 | +----------+  +----------+  |
 +-----------------------------+
