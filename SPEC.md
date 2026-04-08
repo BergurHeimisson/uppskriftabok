@@ -82,8 +82,8 @@ Self-hosted via Docker Compose.
 |  | serves   |                | REST API       |  |
 |  | React    |                | Jsoup importer |  |
 |  +----------+                +----------------+  |
-|                                      | JDBC       |
-|                                      |            |
+|                                      | JDBC      |
+|                                      |           |
 |                              +----------------+  |
 |                              | PostgreSQL     |  |
 |                              | :5432          |  |
