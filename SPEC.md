@@ -156,6 +156,7 @@ Self-hosted via Docker Compose.
 | PUT    | /api/recipes/:id         | Update a recipe                          |
 | DELETE | /api/recipes/:id         | Delete a recipe                          |
 | POST   | /api/import?url=         | Fetch + parse recipe from URL            |
+| POST   | /api/parse-ingredients   | Parse free-text ingredient lines into structured {amount, unit, item} |
 | GET    | /api/grocery             | List all grocery items                   |
 | POST   | /api/grocery             | Add item(s) to grocery list              |
 | PATCH  | /api/grocery/:id         | Toggle checked state                     |
@@ -355,6 +356,39 @@ Mobile-first. All views are single-column, touch-friendly.
 - Falls back to Open Graph meta tags for title/description
 - Returns partial data if only some fields found — user fills the rest
 - Returns 422 with explanation if no recipe data found
+
+#### Ingredient parsing (shared logic)
+Both the URL importer and the free-text parser (see below) use the same ingredient parsing logic on the backend:
+
+1. Input: a list of raw strings, e.g. `["500g ground beef", "1 egg", "½ dl breadcrumbs"]`
+2. Best-effort regex attempts to split each string into `{amount, unit, item}`:
+   - Matches patterns like `500g`, `1/2 dl`, `2 tsp`, `3 large`
+   - Normalises Unicode fractions (`½` → `0.5`, `¼` → `0.25`) before parsing
+3. Strings that don't match cleanly are returned as `{amount: null, unit: "", item: "raw string"}`
+4. User reviews and corrects all rows in the Add Recipe form before saving
+
+**Failure is safe:** unrecognised ingredients are pre-filled as free-text item strings — nothing is silently dropped.
+
+### Free-text Ingredient Parser
+When adding a recipe manually, the user can type (or paste) a block of free-text ingredients instead of filling in rows one by one.
+
+The Add Recipe form has a **"Parse ingredients"** button above the ingredient rows. Clicking it opens a text area:
+
+```
++-----------------------------+
+| Paste ingredients:          |
+| +-------------------------+ |
+| | 500g ground beef        | |
+| | 1 egg                   | |
+| | 1/2 dl breadcrumbs      | |
+| +-------------------------+ |
+|   [Parse]    [Cancel]       |
++-----------------------------+
+```
+
+On "Parse": POST the text to `/api/parse-ingredients` → same backend parser as the URL importer → results pre-fill the ingredient rows. User corrects anything that didn't parse cleanly, then proceeds as normal.
+
+Each line in the text area is treated as one ingredient. Empty lines are ignored.
 
 ### Advance Prep Indicator
 - If `prep_ahead_note` is set, recipe card shows a "Plan ahead" badge
