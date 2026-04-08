@@ -365,6 +365,17 @@ Both the URL importer and the free-text parser (see below) use the same ingredie
 2. Best-effort regex attempts to split each string into `{amount, unit, item}`:
    - Matches patterns like `500g`, `1/2 dl`, `2 tsp`, `3 large`
    - Normalises Unicode fractions (`½` → `0.5`, `¼` → `0.25`) before parsing
+   - Normalises unit aliases to a canonical form before storing:
+     | Input variants         | Stored as |
+     |------------------------|-----------|
+     | `g`, `gr`, `gram`      | `g`       |
+     | `kg`, `kilo`           | `kg`      |
+     | `dl`, `deciliter`      | `dl`      |
+     | `l`, `liter`, `litre`  | `l`       |
+     | `ml`, `milliliter`     | `ml`      |
+     | `tsp`, `ts`, `teaspoon`| `tsp`     |
+     | `tbsp`, `tbs`, `tablespoon` | `tbsp` |
+     | `cup`, `cups`          | `cup`     |
 3. Strings that don't match cleanly are returned as `{amount: null, unit: "", item: "raw string"}`
 4. User reviews and corrects all rows in the Add Recipe form before saving
 
