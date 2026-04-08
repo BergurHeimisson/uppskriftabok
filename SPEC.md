@@ -280,7 +280,7 @@ Mobile-first. All views are single-column, touch-friendly.
 +-----------------------------+
 | Steps                    [+]|
 | 1. +---------------------+  |
-|    | Mix all ingredients  |  |
+|    | Mix all ingredients  | |
 |    +---------------------+  |
 | 2. +---------------------+  |
 |    |                     |  |
