@@ -272,6 +272,7 @@ Mobile-first. All views are single-column, touch-friendly.
 | +-------------------------+ |
 +-----------------------------+
 | Ingredients              [+]|
+| [Parse ingredients]         |
 | +------+ +----+ +--------+  |
 | | 500  | | g  | | beef   |  |
 | +------+ +----+ +--------+  |
