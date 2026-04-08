@@ -1,133 +1,235 @@
-# Uppskriftabok — Personal Recipe Book
+# Uppskriftabók — Personal Recipe Book
 
 ## Overview
 
-A lightweight, mobile-friendly web app for storing and browsing personal recipes.
-No database, no backend — recipes stored as JSON, hosted as a static site.
+A mobile-friendly web app for storing, browsing, and cooking from personal recipes.
+Single user, no authentication. Backend API + PostgreSQL database, React frontend.
+Self-hosted via Docker Compose.
 
-## Goals
+---
 
+## Goals & Non-Goals
+
+### Goals
 - Simple to use on a phone while cooking
-- Easy to add recipes (manually or by importing from a URL)
-- Fast, offline-capable (PWA)
-- No photos for now — focus on clean text layout
+- Add recipes manually or by importing from a URL
+- Serving scaler with clean fraction display
+- Cook mode — distraction-free, step-by-step
+- Grocery list persisted across sessions
+- Fast on mobile, works on home network
+
+### Non-Goals (for now)
+- Offline / PWA support
+- Multi-user / authentication
+- Photos per recipe
+- Menu planner (deferred to Phase 2)
+- Print-friendly view
+- Icelandic language toggle
+- Meal planner (days of the week)
 
 ---
 
-## Tech Stack
+## User Flows
 
-| Layer       | Choice                        | Why                                  |
-|-------------|-------------------------------|--------------------------------------|
-| Frontend    | Vanilla JS + HTML + CSS       | No build step, dead simple           |
-| Data        | Single `recipes.json` file    | Easy to edit, version with git       |
-| Hosting     | GitHub Pages or Netlify       | Free, static, HTTPS out of the box   |
-| Offline     | Service Worker (PWA)          | Works in the kitchen without wifi    |
-| URL Import  | Server function or client-side scraper | Extract recipe from any URL |
+### Browse & Find
+1. Open app → Home page shows recipe cards (title, tags, prep time)
+2. Search bar filters by title, ingredient, or tag in real time (client-side)
+3. Tag filter buttons (dinner, soup, baking, etc.)
+
+### View a Recipe
+1. Tap a card → Recipe detail page
+2. Adjust servings → ingredient amounts update instantly (client-side math, nice fractions)
+3. Tap an ingredient to cross it off while cooking
+4. Tap "Cook mode" → fullscreen, one step at a time, screen stays awake
+
+### Add a Recipe
+1. Tap "Add" → form with title, description, servings, tags
+2. Dynamic ingredient rows (amount, unit, item — add/remove)
+3. Dynamic step rows (add/remove)
+4. Submit → POST to API → saved to PostgreSQL
+
+### Import from URL
+1. In Add Recipe form, paste a URL → click "Import"
+2. POST /api/import?url=... → Spring Boot fetches page, Jsoup parses HTML
+3. Extracts JSON-LD (`<script type="application/ld+json">` with `@type: Recipe`)
+4. Falls back to Open Graph / meta tags for title and description
+5. Response pre-fills the Add Recipe form → user reviews and saves
+
+### Grocery List
+1. On any recipe detail page, tap ingredients to add to grocery list
+2. Grocery list view: check off items while shopping
+3. Clear completed / clear all
+4. List persisted in PostgreSQL — survives refresh and device switch
+
+### Cook Mode
+1. Fullscreen, minimal chrome
+2. One step shown at a time, large text
+3. Tap / swipe to advance steps
+4. Slide-out panel shows full ingredient list
+5. `navigator.wakeLock` keeps screen on
 
 ---
 
-## Recipe Data Model
+## Technical Architecture
 
-```json
-{
-  "id": "kjotbollar",
-  "title": "Kjotbollar",
-  "description": "Classic Icelandic meatballs",
-  "servings": 4,
-  "prepTime": "15 min",
-  "cookTime": "30 min",
-  "tags": ["dinner", "icelandic", "meat"],
-  "ingredients": [
-    { "amount": 500, "unit": "g", "item": "ground beef" },
-    { "amount": 1, "unit": "", "item": "egg" },
-    { "amount": 0.5, "unit": "dl", "item": "breadcrumbs" }
-  ],
-  "steps": [
-    "Mix all ingredients together in a bowl.",
-    "Form into small balls.",
-    "Fry in butter on medium heat for 8-10 minutes."
-  ],
-  "source": "https://example.com/original-recipe",
-  "dateAdded": "2026-04-01"
-}
+```
+┌─────────────────────────────────────────────────┐
+│                  Docker Compose                 │
+│                                                 │
+│  ┌──────────┐   /api/*   ┌─────────────────┐   │
+│  │  Nginx   │ ─────────► │  Spring Boot    │   │
+│  │  :80     │            │  :8080          │   │
+│  │  serves  │            │  REST API       │   │
+│  │  React   │            │  Jsoup importer │   │
+│  └──────────┘            └────────┬────────┘   │
+│                                   │ JDBC        │
+│                          ┌────────▼────────┐   │
+│                          │  PostgreSQL     │   │
+│                          │  :5432          │   │
+│                          └─────────────────┘   │
+└─────────────────────────────────────────────────┘
 ```
 
----
+### Development Setup
+- Backend: `./mvnw spring-boot:run` on `:8080`
+- Frontend: `npm run dev` (Vite) on `:5173`, proxies `/api/*` to `localhost:8080`
+- Database: PostgreSQL running locally or via Docker
 
-## Pages / Views
-
-### 1. Home — Recipe List
-- Grid or list of recipe cards (title, tags, prep time)
-- Search bar (filters by title, ingredient, or tag)
-- Filter buttons for common tags (dinner, soup, baking, etc.)
-
-### 2. Recipe Detail
-- Title and description
-- Servings selector (adjusts ingredient amounts dynamically)
-- Ingredients list (tap to cross off while cooking)
-- Steps (numbered, large text)
-- Source link (if imported)
-- "Cook mode" button — full screen, large font, step-by-step with tap to advance
-
-### 3. Add Recipe
-- Form with fields for title, description, servings, tags
-- Dynamic ingredient rows (amount, unit, item — add/remove rows)
-- Dynamic step rows (add/remove)
-- **Import from URL** button — paste a URL, auto-extract recipe data
-
-### 4. Grocery List
-- Tap ingredients from any recipe to add them to a shared grocery list
-- Check off items while shopping
-- Clear completed / clear all
+### Production Setup
+- `docker-compose up` starts three containers: Nginx, Spring Boot, PostgreSQL
+- Nginx serves built React (`dist/`) and proxies `/api/*` to Spring Boot
+- Frontend built with `npm run build` and copied into the Nginx container
 
 ---
 
-## Import from URL — How It Works
+## Stack
 
-Many recipe sites embed structured data (JSON-LD with schema.org/Recipe).
-The importer should:
-
-1. Fetch the page HTML
-2. Look for `<script type="application/ld+json">` containing `@type: Recipe`
-3. Extract: title, ingredients, steps, servings, prep/cook time
-4. Fall back to Open Graph / meta tags for title and description
-5. Pre-fill the "Add Recipe" form for the user to review and save
-
-**Challenge:** CORS prevents client-side fetching of external pages.
-**Solutions:**
-- A tiny serverless function (Netlify Function / Cloudflare Worker) as a proxy
-- A local CLI tool that outputs JSON (for offline/dev use)
-- Use a free CORS proxy for MVP (with caveats)
+| Layer       | Choice                    | Why                                              |
+|-------------|---------------------------|--------------------------------------------------|
+| Frontend    | React + Vite              | Component model suits dynamic UI (scaler, cook mode) |
+| Backend     | Java 25 + Spring Boot     | Current LTS (Sept 2025), familiar, strong typing, rich ecosystem |
+| Database    | PostgreSQL                | Reliable, relational, good for structured data   |
+| Migrations  | Flyway                    | SQL migration files versioned in git, auto-applied on startup |
+| HTML parser | Jsoup (in Spring Boot)    | Java-native, no separate service needed          |
+| Reverse proxy | Nginx                   | Serves static files + proxies API                |
+| Deployment  | Docker Compose            | Self-hosted on home server/VPS                   |
 
 ---
 
-## Cook Mode
+## Data Model
 
-A distraction-free view for use while cooking:
+### `recipes`
+| Column       | Type      | Notes                              |
+|--------------|-----------|------------------------------------|
+| id           | UUID PK   | Auto-generated                     |
+| title        | TEXT      | Not null                           |
+| description  | TEXT      |                                    |
+| servings     | INT       | Default/base serving count         |
+| prep_time    | TEXT      | e.g. "15 min"                      |
+| cook_time    | TEXT      | e.g. "30 min"                      |
+| tags         | TEXT[]    | PostgreSQL array                   |
+| ingredients  | JSONB     | Array of `{amount, unit, item}` objects. `amount` is a number (null if unquantified), `unit` is a string (empty if unitless) |
+| steps        | TEXT[]    | Ordered list of step strings       |
+| source       | TEXT      | Original URL if imported           |
+| prep_ahead_note | TEXT   | Nullable. If set, recipe requires advance preparation. E.g. "Dough must rest overnight" |
+| date_added   | DATE      | Set on creation                    |
 
-- One step shown at a time, large text
-- Swipe or tap to go forward/back
-- Ingredients visible via a slide-out panel
-- Screen stays awake (`navigator.wakeLock`)
-- Minimal chrome — just the recipe content
+### `grocery_items`
+| Column      | Type     | Notes                              |
+|-------------|----------|------------------------------------|
+| id          | UUID PK  |                                    |
+| recipe_id   | UUID FK  | Source recipe (nullable)           |
+| label       | TEXT     | Display text, e.g. "500g ground beef" |
+| checked     | BOOLEAN  | Default false                      |
+| added_at    | TIMESTAMP |                                   |
 
 ---
 
-## Serving Scaler
+## API Endpoints
 
-- Default servings shown from recipe data
-- User picks desired servings (e.g., 4 -> 6)
-- All ingredient amounts scale proportionally
-- Fractions displayed nicely (e.g., "1/2" not "0.5")
+| Method | Path                     | Description                              |
+|--------|--------------------------|------------------------------------------|
+| GET    | /api/recipes             | List all recipes (id, title, tags, times) |
+| GET    | /api/recipes/:id         | Full recipe with ingredients and steps   |
+| POST   | /api/recipes             | Create a new recipe                      |
+| PUT    | /api/recipes/:id         | Update a recipe                          |
+| DELETE | /api/recipes/:id         | Delete a recipe                          |
+| POST   | /api/import?url=         | Fetch + parse recipe from URL            |
+| GET    | /api/grocery             | List all grocery items                   |
+| POST   | /api/grocery             | Add item(s) to grocery list              |
+| PATCH  | /api/grocery/:id         | Toggle checked state                     |
+| DELETE | /api/grocery/completed   | Clear checked items                      |
+| DELETE | /api/grocery             | Clear all items                          |
 
 ---
 
-## Offline / PWA
+## UI & UX Details
 
-- `manifest.json` for install-to-home-screen
-- Service worker caches `index.html`, CSS, JS, and `recipes.json`
-- Works fully offline once cached
-- Badge or toast when new recipes are available after sync
+### Serving Scaler
+- Four preset buttons: **2 / 4 / 6 / 8** servings — no free-form input
+- Active button highlighted; default selection matches the recipe's base servings (clamped to nearest preset)
+- Raw `amount` values returned from API as numbers
+- React multiplies by `selectedServings / baseServings`
+- Fractions formatted client-side: e.g. `0.5` → `1/2`, `0.333` → `1/3`
+- Common fractions: 1/8, 1/4, 1/3, 1/2, 2/3, 3/4 — round to nearest
+- Amounts > 10 rounded to 1 decimal
+
+### Import from URL
+- Jsoup fetches the page server-side (no CORS issues)
+- Looks for `<script type="application/ld+json">` with `@type: Recipe`
+- Falls back to Open Graph meta tags for title/description
+- Returns partial data if only some fields found — user fills the rest
+- Returns 422 with explanation if no recipe data found
+
+### Advance Prep Indicator
+- If `prep_ahead_note` is set, recipe card shows a "Plan ahead" badge
+- Recipe detail page shows the note prominently near the top (e.g. "Start the day before: Dough must rest overnight")
+- Home page has a "Plan ahead" filter button alongside the tag filters
+- Add Recipe form has a "Requires advance preparation" checkbox; if checked, a text field appears for the note
+
+### Search
+- Filters client-side on the full recipe list fetched at load
+- Matches title, tags, and ingredient items (case-insensitive substring)
+
+### Empty States
+- No recipes yet: prompt to add first recipe or import from URL
+- No search results: "No recipes match your search"
+- Empty grocery list: "Your grocery list is empty"
+
+### Cook Mode
+- Entered via a button on the recipe detail page
+- Uses Fullscreen API
+- `navigator.wakeLock.request('screen')` to keep display on
+- Graceful fallback if wakeLock not supported (no error, just doesn't lock)
+
+---
+
+## Tradeoffs & Decisions
+
+| Decision | Choice | Reason |
+|----------|--------|--------|
+| Backend language | Java + Spring Boot | User preference and familiarity |
+| Separate scraper service | Rejected | Jsoup inside Spring Boot is simpler; no inter-service complexity |
+| Offline / PWA | Dropped | Home server always reachable on local network; sync complexity not worth it |
+| Auth | None | Single user; secure by network (VPN / home LAN) |
+| Ingredient storage | JSONB on recipe row | No join needed; search and scaling are client-side so SQL-level queryability has no value here; simpler schema |
+| Fraction formatting | Client-side | Avoids API call on every scaler adjustment |
+| Frontend framework | React + Vite | Dynamic UI components justify the build step |
+| DB migrations | Flyway | Versioned SQL in git; safe for production |
+| Menu planner | Deferred (Phase 2) | Core recipe book first; menu planner adds significant scope |
+| Spring MVC vs WebFlux | Spring MVC | All queries are simple CRUD; Jsoup importer is synchronous; JPA + Flyway fit the blocking model; easier to debug |
+
+---
+
+## Risks & Mitigations
+
+| Risk | Mitigation |
+|------|------------|
+| Recipe sites block server-side fetching (bot detection, JS-rendered pages) | Jsoup works for static HTML; document known-working sites; graceful 422 response for failures |
+| PostgreSQL data loss on self-hosted server | Docker volume + periodic pg_dump backup (document in runbook) |
+| Flyway migration failures on deploy | Test migrations in dev first; never edit existing migration files |
+| wakeLock not supported on all browsers | Graceful degradation — cook mode works, screen may sleep |
+| Ingredient fractions not always clean | Define rounding strategy clearly in code; surface raw decimal as fallback |
 
 ---
 
@@ -135,81 +237,83 @@ A distraction-free view for use while cooking:
 
 ```
 uppskriftabok/
-  index.html          — single page app shell
-  style.css           — responsive, mobile-first styles
-  app.js              — main application logic
-  recipes.json        — all recipe data
-  importer.js         — URL import logic
-  sw.js               — service worker for offline
-  manifest.json       — PWA manifest
-  functions/          — (optional) serverless proxy for URL import
-    fetch-recipe.js
+  frontend/                   — React + Vite app
+    src/
+      components/
+        RecipeCard.jsx
+        RecipeDetail.jsx
+        CookMode.jsx
+        ServingScaler.jsx
+        GroceryList.jsx
+        AddRecipeForm.jsx
+        ImportUrl.jsx
+      pages/
+        Home.jsx
+        Recipe.jsx
+        Add.jsx
+        Grocery.jsx
+      App.jsx
+      main.jsx
+    vite.config.js            — proxy /api/* to localhost:8080
+    index.html
+
+  backend/                    — Spring Boot (Maven)
+    src/main/java/
+      recipes/
+        RecipeController.java
+        RecipeService.java
+        RecipeRepository.java
+        ImportService.java    — Jsoup URL importer
+        GroceryController.java
+        GroceryService.java
+        GroceryRepository.java
+        model/
+          Recipe.java
+          Ingredient.java
+          GroceryItem.java
+    src/main/resources/
+      db/migration/           — Flyway SQL files
+        V1__create_recipes.sql
+        V2__create_ingredients.sql
+        V3__create_grocery_items.sql
+      application.properties
+
+  docker-compose.yml          — postgres + spring boot + nginx
+  nginx/
+    nginx.conf                — static files + /api proxy
 ```
 
 ---
 
-## Menu Planner (for Guests)
+## Development Approach
 
-Create a menu for a dinner party or gathering — pick recipes, set the guest count,
-and get a unified view of everything you need to prepare.
+**TDD is mandatory, no exceptions.** Write a failing test first, then write the minimum code to pass it, then refactor. This applies to every layer — Spring Boot services, repositories, React components, and utilities. No implementation code without a red test first.
 
-### How It Works
-
-- **Create a menu**: give it a name, date, and number of guests
-- **Add recipes**: browse your recipe list and add dishes to the menu (starter, main, side, dessert, etc.)
-- **Auto-scale**: all ingredient amounts adjust to the guest count
-- **Combined grocery list**: merge ingredients across all dishes in the menu — no duplicates (e.g., if two recipes need butter, show the total)
-- **Timeline view**: order the dishes by prep/cook time so you know what to start first
-- **Share**: generate a simple link or printable page to share the menu (just the dish names and descriptions, not full recipes)
-
-### Menu Data Model
-
-```json
-{
-  "id": "pasku-kvoldmatur",
-  "name": "Paskukvoldmatur",
-  "date": "2026-04-05",
-  "guests": 8,
-  "courses": [
-    { "category": "starter", "recipeId": "hummus", "servings": 8 },
-    { "category": "main", "recipeId": "kjotbollar", "servings": 8 },
-    { "category": "side", "recipeId": "kartoflumauk", "servings": 8 },
-    { "category": "dessert", "recipeId": "skyr-terta", "servings": 8 }
-  ],
-  "notes": "Jón is allergic to nuts"
-}
-```
-
-### Menu View
-
-- Menu title, date, and guest count at the top
-- Courses listed in order (starter → main → side → dessert)
-- Each course links to the full recipe
-- "Prep timeline" button — shows when to start each dish counting back from serving time
-- "Full grocery list" button — combined, de-duplicated ingredients for the whole menu
-
----
-
-## Future Ideas (Not Now)
-
-- Photo per recipe
-- Family sharing / multi-user
-- Print-friendly view
-- Inline timer buttons in steps
-- Meal planner (assign recipes to days of the week)
-- Icelandic language toggle
+- Backend: JUnit 5 + Spring Boot Test + Testcontainers (real PostgreSQL in tests)
+- Frontend: Vitest + React Testing Library for components; Playwright for e2e
 
 ---
 
 ## MVP Scope
 
-For the first version, build:
+1. Database schema + Flyway migrations for recipes, ingredients, grocery items
+2. Spring Boot REST API (CRUD for recipes, grocery list, import endpoint)
+3. React frontend: Home (search + filter), Recipe Detail (scaler + cross-off), Add Recipe form
+4. Import from URL via Jsoup
+5. Grocery list (add from recipe, check off, clear)
+6. Cook mode (fullscreen, step-by-step, wakeLock)
+7. Docker Compose setup for production
 
-1. `recipes.json` with 2-3 sample recipes
-2. Home page with search
-3. Recipe detail view with serving scaler
-4. Add recipe form
-5. Import from URL (using a CORS proxy for MVP)
-6. Basic PWA setup (service worker + manifest)
+No auth. No photos. No menu planner. No offline.
 
-No auth, no database, no photos. Keep it minimal.
+---
+
+## Phase 2 (Future)
+
+- Menu Planner: create a multi-course dinner menu, auto-scale ingredients to guest count,
+  combined de-duplicated grocery list, prep timeline, shareable link
+- Photo per recipe
+- Icelandic language toggle
+- Print-friendly view
+- Inline step timers
+- Family sharing / multi-user
