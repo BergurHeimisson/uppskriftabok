@@ -120,20 +120,29 @@ Self-hosted via Docker Compose.
 ## Data Model
 
 ### `recipes`
-| Column       | Type      | Notes                              |
-|--------------|-----------|------------------------------------|
-| id           | UUID PK   | Auto-generated                     |
-| title        | TEXT      | Not null                           |
-| description  | TEXT      |                                    |
-| servings     | INT       | Default/base serving count         |
-| prep_time    | TEXT      | Nullable. Optional — only shown/stored if user fills it in |
-| cook_time    | TEXT      | Nullable. Optional — only shown/stored if user fills it in |
-| tags         | TEXT[]    | PostgreSQL array                   |
-| ingredients  | JSONB     | Array of `{amount, unit, item}` objects. `amount` is a number (null if unquantified), `unit` is a string (empty if unitless) |
-| steps        | TEXT[]    | Ordered list of step strings       |
-| source       | TEXT      | Original URL if imported           |
-| prep_ahead_note | TEXT   | Nullable. If set, recipe requires advance preparation. E.g. "Dough must rest overnight" |
-| date_added   | DATE      | Set on creation                    |
+| Column          | Type    | Notes                              |
+|-----------------|---------|------------------------------------|
+| id              | UUID PK | Auto-generated                     |
+| title           | TEXT    | Not null                           |
+| description     | TEXT    |                                    |
+| servings        | INT     | Default/base serving count         |
+| prep_time       | TEXT    | Nullable. Optional — only shown/stored if user fills it in |
+| cook_time       | TEXT    | Nullable. Optional — only shown/stored if user fills it in |
+| tags            | TEXT[]  | PostgreSQL array                   |
+| steps           | TEXT[]  | Ordered list of step strings       |
+| source          | TEXT    | Original URL if imported           |
+| prep_ahead_note | TEXT    | Nullable. If set, recipe requires advance preparation. E.g. "Dough must rest overnight" |
+| date_added      | DATE    | Set on creation                    |
+
+### `recipe_ingredients`
+| Column     | Type      | Notes                                                   |
+|------------|-----------|---------------------------------------------------------|
+| id         | UUID PK   | Auto-generated                                          |
+| recipe_id  | UUID FK   | References `recipes(id)` ON DELETE CASCADE              |
+| sort_order | INT       | Preserves display order within a recipe                 |
+| amount     | NUMERIC   | Nullable — null if unquantified (e.g. "a pinch of salt") |
+| unit       | TEXT      | Empty string if unitless. Stored in canonical form (see unit alias table) |
+| item       | TEXT      | Not null. Ingredient name                               |
 
 ### `grocery_items`
 | Column      | Type     | Notes                              |
@@ -433,7 +442,7 @@ Each line in the text area is treated as one ingredient. Empty lines are ignored
 | Separate scraper service | Rejected | Jsoup inside Spring Boot is simpler; no inter-service complexity |
 | Offline / PWA | Dropped | Home server always reachable on local network; sync complexity not worth it |
 | Auth | None | Single user; secure by network (VPN / home LAN) |
-| Ingredient storage | JSONB on recipe row | No join needed; search and scaling are client-side so SQL-level queryability has no value here; simpler schema |
+| Ingredient storage | Normalised `recipe_ingredients` table | SQL-level queryability (ingredient search, future grocery deduplication across recipes); clean JPA mapping; API response shape is unchanged — frontend still receives an array of `{amount, unit, item}` |
 | Fraction formatting | Client-side | Avoids API call on every scaler adjustment |
 | Frontend framework | React + Vite | Dynamic UI components justify the build step |
 | DB migrations | Flyway | Versioned SQL in git; safe for production |
