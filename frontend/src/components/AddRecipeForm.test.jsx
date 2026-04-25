@@ -6,9 +6,23 @@ import * as api from '../api'
 
 vi.mock('../api')
 
+const existingRecipe = {
+  id: 'r1',
+  title: 'Kjötbollar',
+  description: 'Classic meatballs',
+  servings: 4,
+  tags: ['dinner', 'icelandic'],
+  prep_time: '15 min',
+  cook_time: '20 min',
+  prep_ahead_note: null,
+  ingredients: [{ amount: 500, unit: 'g', item: 'ground beef' }],
+  steps: ['Mix ingredients.', 'Cook.'],
+}
+
 beforeEach(() => {
   vi.clearAllMocks()
   api.createRecipe.mockResolvedValue({ id: 'new-id' })
+  api.updateRecipe.mockResolvedValue(existingRecipe)
   api.importFromUrl.mockResolvedValue({
     title: 'Imported Recipe',
     description: 'From the web',
@@ -26,6 +40,10 @@ beforeEach(() => {
 
 function renderForm() {
   return render(<MemoryRouter><AddRecipeForm /></MemoryRouter>)
+}
+
+function renderEditForm(recipe = existingRecipe) {
+  return render(<MemoryRouter><AddRecipeForm initialRecipe={recipe} /></MemoryRouter>)
 }
 
 describe('AddRecipeForm', () => {
@@ -175,5 +193,49 @@ describe('AddRecipeForm', () => {
 
     const payload = api.createRecipe.mock.calls[0][0]
     expect(payload.ingredients[0].item).toBe('flour')
+  })
+})
+
+describe('AddRecipeForm in edit mode', () => {
+  it('pre-fills the title', () => {
+    renderEditForm()
+    expect(screen.getByDisplayValue('Kjötbollar')).toBeInTheDocument()
+  })
+
+  it('pre-fills tags as comma-separated string', () => {
+    renderEditForm()
+    expect(screen.getByDisplayValue('dinner, icelandic')).toBeInTheDocument()
+  })
+
+  it('pre-fills ingredient rows', () => {
+    renderEditForm()
+    expect(screen.getByDisplayValue('ground beef')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('500')).toBeInTheDocument()
+  })
+
+  it('pre-fills step rows', () => {
+    renderEditForm()
+    expect(screen.getByDisplayValue('Mix ingredients.')).toBeInTheDocument()
+  })
+
+  it('shows prep/cook time fields when recipe has times', () => {
+    renderEditForm()
+    expect(screen.getByDisplayValue('15 min')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('20 min')).toBeInTheDocument()
+  })
+
+  it('hides the URL import section', () => {
+    renderEditForm()
+    expect(screen.queryByPlaceholderText(/https/i)).not.toBeInTheDocument()
+  })
+
+  it('calls updateRecipe on submit, not createRecipe', async () => {
+    const user = userEvent.setup()
+    renderEditForm()
+    await user.click(screen.getByRole('button', { name: /save recipe/i }))
+    await waitFor(() =>
+      expect(api.updateRecipe).toHaveBeenCalledWith('r1', expect.objectContaining({ title: 'Kjötbollar' }))
+    )
+    expect(api.createRecipe).not.toHaveBeenCalled()
   })
 })

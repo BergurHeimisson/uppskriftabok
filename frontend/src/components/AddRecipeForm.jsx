@@ -2,25 +2,32 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { ArrowLeft, Download, Wand2, Plus, Trash2, Check, X, BookmarkCheck } from 'lucide-react'
 import ServingScaler from './ServingScaler'
-import { createRecipe, importFromUrl, parseIngredients } from '../api'
+import { createRecipe, updateRecipe, importFromUrl, parseIngredients } from '../api'
 
 const emptyIngredient = () => ({ amount: '', unit: '', item: '' })
 const emptyStep = () => ''
 
-export default function AddRecipeForm() {
+export default function AddRecipeForm({ initialRecipe } = {}) {
   const navigate = useNavigate()
+  const isEdit = !!initialRecipe
 
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [servings, setServings] = useState(4)
-  const [tagsInput, setTagsInput] = useState('')
-  const [showTimes, setShowTimes] = useState(false)
-  const [prepTime, setPrepTime] = useState('')
-  const [cookTime, setCookTime] = useState('')
-  const [showPrepAhead, setShowPrepAhead] = useState(false)
-  const [prepAheadNote, setPrepAheadNote] = useState('')
-  const [ingredients, setIngredients] = useState([emptyIngredient()])
-  const [steps, setSteps] = useState([emptyStep()])
+  const [title, setTitle] = useState(initialRecipe?.title ?? '')
+  const [description, setDescription] = useState(initialRecipe?.description ?? '')
+  const [servings, setServings] = useState(initialRecipe?.servings ?? 4)
+  const [tagsInput, setTagsInput] = useState(initialRecipe?.tags?.join(', ') ?? '')
+  const [showTimes, setShowTimes] = useState(!!(initialRecipe?.prep_time || initialRecipe?.cook_time))
+  const [prepTime, setPrepTime] = useState(initialRecipe?.prep_time ?? '')
+  const [cookTime, setCookTime] = useState(initialRecipe?.cook_time ?? '')
+  const [showPrepAhead, setShowPrepAhead] = useState(!!initialRecipe?.prep_ahead_note)
+  const [prepAheadNote, setPrepAheadNote] = useState(initialRecipe?.prep_ahead_note ?? '')
+  const [ingredients, setIngredients] = useState(
+    initialRecipe?.ingredients?.map(ing => ({
+      amount: ing.amount ?? '',
+      unit: ing.unit ?? '',
+      item: ing.item ?? '',
+    })) ?? [emptyIngredient()]
+  )
+  const [steps, setSteps] = useState(initialRecipe?.steps ?? [emptyStep()])
   const [urlInput, setUrlInput] = useState('')
   const [showParseModal, setShowParseModal] = useState(false)
   const [parseText, setParseText] = useState('')
@@ -117,8 +124,13 @@ export default function AddRecipeForm() {
       ...(showTimes && cookTime && { cook_time: cookTime }),
       ...(showPrepAhead && prepAheadNote && { prep_ahead_note: prepAheadNote }),
     }
-    await createRecipe(payload)
-    navigate('/')
+    if (isEdit) {
+      await updateRecipe(initialRecipe.id, payload)
+      navigate(`/recipe/${initialRecipe.id}`)
+    } else {
+      await createRecipe(payload)
+      navigate('/')
+    }
   }
 
   const inputCls = 'border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent'
@@ -131,10 +143,10 @@ export default function AddRecipeForm() {
         <ArrowLeft size={15} />
         Back
       </Link>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Add Recipe</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">{isEdit ? 'Edit Recipe' : 'Add Recipe'}</h1>
 
-      {/* URL import */}
-      <div className="mb-6 p-4 bg-white rounded-xl border border-gray-200">
+      {/* URL import — create mode only */}
+      {!isEdit && <div className="mb-6 p-4 bg-white rounded-xl border border-gray-200">
         <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">Import from URL</p>
         <div className="flex gap-2 items-center">
           <input
@@ -156,7 +168,7 @@ export default function AddRecipeForm() {
           </button>
         </div>
         {importError && <p className="mt-2 text-sm text-red-500">{importError}</p>}
-      </div>
+      </div>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

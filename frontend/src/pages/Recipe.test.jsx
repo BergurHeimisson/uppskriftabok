@@ -31,6 +31,7 @@ function renderRecipe(id = 'r1') {
   return render(
     <MemoryRouter initialEntries={[`/recipe/${id}`]}>
       <Routes>
+        <Route path="/" element={<div>Home page</div>} />
         <Route path="/recipe/:id" element={<Recipe />} />
       </Routes>
     </MemoryRouter>
@@ -83,32 +84,78 @@ describe('Recipe page', () => {
     expect(screen.getByText('1/4')).toBeInTheDocument()
   })
 
-  it('can cross off an ingredient with its checkbox', async () => {
-    const user = userEvent.setup()
-    renderRecipe()
-    await waitFor(() => screen.getByText('Kjötbollar'))
-
-    const checkbox = screen.getByRole('checkbox', { name: /ground beef/i })
-    expect(checkbox).not.toBeChecked()
-    await user.click(checkbox)
-    expect(checkbox).toBeChecked()
-  })
-
-  it('un-crosses an ingredient when clicked again', async () => {
-    const user = userEvent.setup()
-    renderRecipe()
-    await waitFor(() => screen.getByText('Kjötbollar'))
-
-    const checkbox = screen.getByRole('checkbox', { name: /ground beef/i })
-    await user.click(checkbox)
-    await user.click(checkbox)
-    expect(checkbox).not.toBeChecked()
-  })
-
   it('shows plan-ahead notice when prep_ahead_note is set', async () => {
     api.getRecipe.mockResolvedValue({ ...recipe, prep_ahead_note: 'Dough must rest overnight' })
     renderRecipe()
     await waitFor(() => screen.getByText(/dough must rest overnight/i))
+  })
+
+  it('has an add-to-grocery button for each ingredient', async () => {
+    renderRecipe()
+    await waitFor(() => screen.getByText('Kjötbollar'))
+    const buttons = screen.getAllByRole('button', { name: /add .* to grocery/i })
+    expect(buttons).toHaveLength(3)
+  })
+
+  it('calls addToGrocery with the formatted label when an ingredient is added', async () => {
+    api.addToGrocery.mockResolvedValue([])
+    const user = userEvent.setup()
+    renderRecipe()
+    await waitFor(() => screen.getByText('Kjötbollar'))
+
+    await user.click(screen.getByRole('button', { name: /add ground beef to grocery/i }))
+    expect(api.addToGrocery).toHaveBeenCalledWith([{ recipeId: 'r1', label: '500 g ground beef' }])
+  })
+
+  it('disables the add button after adding', async () => {
+    api.addToGrocery.mockResolvedValue([])
+    const user = userEvent.setup()
+    renderRecipe()
+    await waitFor(() => screen.getByText('Kjötbollar'))
+
+    const btn = screen.getByRole('button', { name: /add ground beef to grocery/i })
+    await user.click(btn)
+    await waitFor(() => expect(btn).toBeDisabled())
+  })
+
+  it('has a delete button', async () => {
+    renderRecipe()
+    await waitFor(() => screen.getByText('Kjötbollar'))
+    expect(screen.getByRole('button', { name: /delete recipe/i })).toBeInTheDocument()
+  })
+
+  it('shows confirmation when delete is clicked', async () => {
+    const user = userEvent.setup()
+    renderRecipe()
+    await waitFor(() => screen.getByText('Kjötbollar'))
+
+    await user.click(screen.getByRole('button', { name: /delete recipe/i }))
+    expect(screen.getByRole('button', { name: /yes, delete/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument()
+  })
+
+  it('hides confirmation when cancel is clicked', async () => {
+    const user = userEvent.setup()
+    renderRecipe()
+    await waitFor(() => screen.getByText('Kjötbollar'))
+
+    await user.click(screen.getByRole('button', { name: /delete recipe/i }))
+    await user.click(screen.getByRole('button', { name: /cancel/i }))
+    expect(screen.queryByRole('button', { name: /yes, delete/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /delete recipe/i })).toBeInTheDocument()
+  })
+
+  it('calls deleteRecipe and navigates home on confirm', async () => {
+    api.deleteRecipe.mockResolvedValue()
+    const user = userEvent.setup()
+    renderRecipe()
+    await waitFor(() => screen.getByText('Kjötbollar'))
+
+    await user.click(screen.getByRole('button', { name: /delete recipe/i }))
+    await user.click(screen.getByRole('button', { name: /yes, delete/i }))
+
+    expect(api.deleteRecipe).toHaveBeenCalledWith('r1')
+    await waitFor(() => expect(screen.getByText('Home page')).toBeInTheDocument())
   })
 
   it('has a Cook Mode button', async () => {

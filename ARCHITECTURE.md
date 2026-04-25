@@ -74,7 +74,7 @@ src/
   api.js          Real API client (fetch, BASE = '/api')
   api.mock.js     In-memory mock for development without backend
   components/     Reusable UI — AddRecipeForm, GroceryList, CookMode, ServingScaler, ...
-  pages/          Route-level components — Home, Recipe, Add, Grocery
+  pages/          Route-level components — Home, Recipe, Add, Edit, Grocery
   utils/
     fractions.js  Client-side fraction formatting (0.5 → "1/2")
 ```
