@@ -44,7 +44,7 @@ describe('Home page', () => {
     renderHome()
     await waitFor(() => screen.getByText('Kjötbollar'))
 
-    await user.type(screen.getByPlaceholderText(/search/i), 'Hummus')
+    await user.type(screen.getByPlaceholderText(/leita/i), 'Hummus')
 
     expect(screen.getByText('Hummus')).toBeInTheDocument()
     expect(screen.queryByText('Kjötbollar')).not.toBeInTheDocument()
@@ -56,7 +56,7 @@ describe('Home page', () => {
     renderHome()
     await waitFor(() => screen.getByText('Kjötbollar'))
 
-    await user.type(screen.getByPlaceholderText(/search/i), 'chickpeas')
+    await user.type(screen.getByPlaceholderText(/leita/i), 'chickpeas')
 
     expect(screen.getByText('Hummus')).toBeInTheDocument()
     expect(screen.queryByText('Kjötbollar')).not.toBeInTheDocument()

@@ -57,7 +57,7 @@ export default function Home() {
 
       <input
         type="search"
-        placeholder="Search recipes..."
+        placeholder="Leita..."
         value={search}
         onChange={e => setSearch(e.target.value)}
         className="mb-4"
