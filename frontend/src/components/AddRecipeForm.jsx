@@ -128,7 +128,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
     <main className="max-w-2xl mx-auto px-4 py-6">
       <Link to="/" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-4">
         <ArrowLeft size={15} />
-        Back
+        Til baka
       </Link>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">{isEdit ? 'Edit Recipe' : 'Add Recipe'}</h1>
 

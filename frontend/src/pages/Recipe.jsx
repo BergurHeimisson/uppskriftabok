@@ -46,7 +46,7 @@ export default function Recipe() {
     <main className="max-w-4xl mx-auto px-4 py-6">
       <Link to="/" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-4">
         <ArrowLeft size={15} />
-        Back
+        Til baka
       </Link>
 
       <div className="flex items-start justify-between mb-4">
