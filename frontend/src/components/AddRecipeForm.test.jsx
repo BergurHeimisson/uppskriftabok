@@ -80,9 +80,9 @@ describe('AddRecipeForm', () => {
     expect(screen.getAllByPlaceholderText(/^item$/i)).toHaveLength(1)
   })
 
-  it('has a How to textarea', () => {
+  it('has a Punktar textarea', () => {
     renderForm()
-    expect(screen.getByPlaceholderText(/how to/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/punktar/i)).toBeInTheDocument()
   })
 
   it('shows prep/cook time fields when checkbox is checked', async () => {
@@ -208,7 +208,7 @@ describe('AddRecipeForm in edit mode', () => {
 
   it('pre-fills instructions textarea', () => {
     renderEditForm()
-    expect(screen.getByRole('textbox', { name: /how to/i })).toHaveValue('Mix ingredients.\nCook.')
+    expect(screen.getByRole('textbox', { name: /punktar/i })).toHaveValue('Mix ingredients.\nCook.')
   })
 
   it('shows prep/cook time fields when recipe has times', () => {

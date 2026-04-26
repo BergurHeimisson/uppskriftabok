@@ -345,12 +345,12 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
           </div>
         </div>
 
-        {/* How to */}
+        {/* Punktar */}
         <div>
-          <label htmlFor="instructions" className={labelCls}>How to</label>
+          <label htmlFor="instructions" className={labelCls}>Punktar</label>
           <textarea
             id="instructions"
-            placeholder="How to make this…"
+            placeholder="Punktar..."
             value={instructions}
             onChange={e => setInstructions(e.target.value)}
             rows={8}
