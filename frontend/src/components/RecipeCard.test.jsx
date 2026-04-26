@@ -34,13 +34,13 @@ describe('RecipeCard', () => {
     expect(screen.getByRole('link')).toHaveAttribute('href', '/recipe/abc')
   })
 
-  it('shows Plan ahead badge when prep_ahead_note is set', () => {
+  it('shows prep-ahead icon when prep_ahead_note is set', () => {
     renderCard({ ...base, prep_ahead_note: 'Dough must rest overnight' })
-    expect(screen.getByText(/plan ahead/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/þarf undirbúning/i)).toBeInTheDocument()
   })
 
-  it('does not show Plan ahead badge when prep_ahead_note is null', () => {
+  it('does not show prep-ahead icon when prep_ahead_note is null', () => {
     renderCard()
-    expect(screen.queryByText(/plan ahead/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/þarf undirbúning/i)).not.toBeInTheDocument()
   })
 })
