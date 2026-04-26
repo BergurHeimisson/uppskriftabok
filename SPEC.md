@@ -130,7 +130,7 @@ Self-hosted via Docker Compose.
 | cook_time       | TEXT    | Nullable. Optional — only shown/stored if user fills it in |
 | tags            | TEXT[]  | PostgreSQL array                   |
 | ingredients     | JSONB   | Array of `{amount, unit, item}` objects. `amount` is a number (null if unquantified), `unit` is a string (empty if unitless) |
-| steps           | TEXT[]  | Ordered list of step strings       |
+| instructions    | TEXT    | Free-form cooking instructions     |
 | source          | TEXT    | Original URL if imported           |
 | prep_ahead_note | TEXT    | Nullable. If set, recipe requires advance preparation. E.g. "Dough must rest overnight" |
 | date_added      | DATE    | Set on creation                    |
@@ -151,7 +151,7 @@ Self-hosted via Docker Compose.
 | Method | Path                     | Description                              |
 |--------|--------------------------|------------------------------------------|
 | GET    | /api/recipes             | List all recipes (id, title, tags, times) |
-| GET    | /api/recipes/:id         | Full recipe with ingredients and steps   |
+| GET    | /api/recipes/:id         | Full recipe with ingredients and instructions |
 | POST   | /api/recipes             | Create a new recipe                      |
 | PUT    | /api/recipes/:id         | Update a recipe                          |
 | DELETE | /api/recipes/:id         | Delete a recipe                          |
@@ -167,176 +167,7 @@ Self-hosted via Docker Compose.
 
 ## Wireframes
 
-Mobile-first. All views are single-column, touch-friendly.
-
-### Home — Recipe List
-```
-+-----------------------------+
-|  Uppskriftabok          [+] |
-+-----------------------------+
-| [?] Search recipes...       |
-+-----------------------------+
-| [All] [Dinner] [Soup]       |
-| [Baking] [Plan ahead]       |
-+-----------------------------+
-| +-------------------------+ |
-| | Kjotbollar              | |
-| | #dinner #icelandic      | |
-| +-------------------------+ |
-| +-------------------------+ |
-| | Baguette      [!] Plan  | |
-| | #baking #bread          | |
-| +-------------------------+ |
-| +-------------------------+ |
-| | Hummus                  | |
-| | #starter #vegetarian    | |
-| +-------------------------+ |
-+-----------------------------+
-```
-
-### Recipe Detail
-```
-+-----------------------------+
-| < Kjotbollar                |
-+-----------------------------+
-| Classic Icelandic meatballs |
-+-----------------------------+
-| Servings:  [2] [4] [6] [8]  |
-+-----------------------------+
-| Ingredients                 |
-| [ ] 500 g    ground beef    |
-| [ ] 1        egg            |
-| [ ] 1/2 dl   breadcrumbs    |
-| [ ] 1 tsp    salt           |
-+-----------------------------+
-| Steps                       |
-| 1. Mix all ingredients      |
-|    together in a bowl.      |
-|                             |
-| 2. Form into small balls.   |
-|                             |
-| 3. Fry in butter on medium  |
-|    heat for 8-10 minutes.   |
-+-----------------------------+
-|       [ Cook Mode ]         |
-+-----------------------------+
-```
-
-### Recipe Detail — Plan Ahead notice
-```
-+-----------------------------+
-| < Baguette                  |
-+-----------------------------+
-| +-------------------------+ |
-| | [!] Start the day before| |
-| |     Dough must rest     | |
-| |     overnight           | |
-| +-------------------------+ |
-|  ...                        |
-+-----------------------------+
-```
-
-### Add Recipe
-```
-+-----------------------------+
-| < Add Recipe                |
-+-----------------------------+
-| Import from URL             |
-| +-------------------------+ |
-| | https://...             | |
-| +-------------------------+ |
-|      [Import Recipe]        |
-+-----------------------------+
-| Title                       |
-| +-------------------------+ |
-| |                         | |
-| +-------------------------+ |
-| Description                 |
-| +-------------------------+ |
-| |                         | |
-| +-------------------------+ |
-| Base servings               |
-| [2] [4] [6] [8]             |
-| Tags (comma separated)      |
-| +-------------------------+ |
-| |                         | |
-| +-------------------------+ |
-| [ ] Add prep/cook times     |
-| +----------+  +----------+  | <- appears when checked
-| | 15 min   |  | 30 min   |  |
-| +----------+  +----------+  |
-+-----------------------------+
-| [ ] Requires advance prep   |
-| +-------------------------+ | <- appears when checked
-| | Dough must rest...      | |
-| +-------------------------+ |
-+-----------------------------+
-| Ingredients              [+]|
-| [Parse ingredients]         |
-| +------+ +----+ +--------+  |
-| | 500  | | g  | | beef   |  |
-| +------+ +----+ +--------+  |
-| +------+ +----+ +--------+  |
-| | 1    | |    | | egg    |  |
-| +------+ +----+ +--------+  |
-+-----------------------------+
-| Steps                    [+]|
-| 1. +---------------------+  |
-|    | Mix all ingredients  | |
-|    +---------------------+  |
-| 2. +---------------------+  |
-|    |                     |  |
-|    +---------------------+  |
-+-----------------------------+
-|        [ Save Recipe ]      |
-+-----------------------------+
-```
-
-### Grocery List
-```
-+-----------------------------+
-|  Grocery List               |
-+-----------------------------+
-| From: Kjotbollar            |
-| [x] 500 g ground beef       |
-| [ ] 1 egg                   |
-| [ ] 1/2 dl breadcrumbs      |
-|                             |
-| From: Hummus                |
-| [ ] 400 g chickpeas         |
-| [ ] 2 tbsp tahini           |
-+-----------------------------+
-| [Clear done]    [Clear all] |
-+-----------------------------+
-```
-
-### Cook Mode
-```
-+-----------------------------+
-| Kjotbollar          Step 2/3|
-|                             |
-|                             |
-|                             |
-|    Form into small balls.   |
-|                             |
-|                             |
-|                             |
-|                             |
-|  < Back          Next >     |
-+-----------------------------+
-| [= Ingredients]             |
-+-----------------------------+
-```
-
-#### Cook Mode — Ingredients panel (slide up)
-```
-+-----------------------------+
-| Ingredients             [x] |
-|  500 g    ground beef       |
-|  1        egg               |
-|  1/2 dl   breadcrumbs       |
-+-----------------------------+
-```
+See [WIREFRAME.md](WIREFRAME.md).
 
 ---
 
