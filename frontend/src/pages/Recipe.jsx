@@ -106,14 +106,12 @@ export default function Recipe() {
         </ul>
       </section>
 
-      <section className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">Steps</h2>
-        <ol className="space-y-3 list-decimal list-inside">
-          {recipe.steps.map((step, i) => (
-            <li key={i} className="text-sm text-gray-700 leading-relaxed">{step}</li>
-          ))}
-        </ol>
-      </section>
+      {recipe.instructions && (
+        <section className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-800 mb-3">How to</h2>
+          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{recipe.instructions}</p>
+        </section>
+      )}
 
       <button
         onClick={() => setCookMode(true)}

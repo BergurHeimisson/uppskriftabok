@@ -10,5 +10,8 @@ frontend/.env.local
 # TLS certs
 nginx/certs/
 
+# Backups
+backups/
+
 # OS
 .DS_Store

@@ -21,12 +21,7 @@ const RECIPES = [
       { amount: 0.5, unit: 'tsk', item: 'pipar' },
       { amount: 1, unit: 'msk', item: 'smjör til steikingar' },
     ],
-    steps: [
-      'Blandið saman hakki, eggi, brauðmylsnu, salti og pipar í skál.',
-      'Mótið blönduna í litlar kúlur, um 3–4 sm í þvermál.',
-      'Bræðið smjör á pönnu á meðalhita. Steikið kjötbollurnar í 8–10 mínútur þar til þær eru brúnar og soðnar í gegn.',
-      'Berið fram með kartöflumús og rauðkálssalati.',
-    ],
+    instructions: 'Blandið saman hakki, eggi, brauðmylsnu, salti og pipar í skál.\nMótið blönduna í litlar kúlur, um 3–4 sm í þvermál.\nBræðið smjör á pönnu á meðalhita. Steikið kjötbollurnar í 8–10 mínútur þar til þær eru brúnar og soðnar í gegn.\nBerið fram með kartöflumús og rauðkálssalati.',
     source: null,
   },
   {
@@ -44,13 +39,7 @@ const RECIPES = [
       { amount: 10, unit: 'g', item: 'salt' },
       { amount: 350, unit: 'ml', item: 'volgt vatn' },
     ],
-    steps: [
-      'Blandið hveiti, geri og salti saman.',
-      'Bætið vatni saman við og hnoðið þar til deigið er slétt, u.þ.b. 10 mínútur.',
-      'Hyljið og látið hefast í 1 klukkustund við stofuhita, setjið síðan í ísskáp yfir nótt.',
-      'Mótið deigið í baguette-lögun og látið hefast í 45 mínútur.',
-      'Bakið við 240°C í 22–25 mínútur þar til brauðið er gullið og stökkt.',
-    ],
+    instructions: 'Blandið hveiti, geri og salti saman.\nBætið vatni saman við og hnoðið þar til deigið er slétt, u.þ.b. 10 mínútur.\nHyljið og látið hefast í 1 klukkustund við stofuhita, setjið síðan í ísskáp yfir nótt.\nMótið deigið í baguette-lögun og látið hefast í 45 mínútur.\nBakið við 240°C í 22–25 mínútur þar til brauðið er gullið og stökkt.',
     source: null,
   },
   {
@@ -70,12 +59,7 @@ const RECIPES = [
       { amount: 3, unit: 'msk', item: 'ólífuolía' },
       { amount: null, unit: '', item: 'salt eftir smekk' },
     ],
-    steps: [
-      'Hellið kjúklingabaunum í matvinnsluvél ásamt tahini, sítrónusafa og hvítlauk.',
-      'Blandið þar til slétt. Hellið í ólífuolíuna meðan vinnsluvélin er í gangi.',
-      'Smakkið til með salti og sítrónusafa.',
-      'Berið fram með ólífuolíu og paprikudufti yfir.',
-    ],
+    instructions: 'Hellið kjúklingabaunum í matvinnsluvél ásamt tahini, sítrónusafa og hvítlauk.\nBlandið þar til slétt. Hellið í ólífuolíuna meðan vinnsluvélin er í gangi.\nSmakkið til með salti og sítrónusafa.\nBerið fram með ólífuolíu og paprikudufti yfir.',
     source: null,
   },
   {
@@ -93,11 +77,7 @@ const RECIPES = [
       { amount: 1, unit: 'msk', item: 'hunang' },
       { amount: 2, unit: 'msk', item: 'granola' },
     ],
-    steps: [
-      'Setjið skyr í skál.',
-      'Dreifið berjunum yfir.',
-      'Hellið hunangi yfir og stráið granola yfir.',
-    ],
+    instructions: 'Setjið skyr í skál.\nDreifið berjunum yfir.\nHellið hunangi yfir og stráið granola yfir.',
     source: null,
   },
 ]
@@ -159,11 +139,7 @@ export async function importFromUrl(_url) {
       { amount: 4, unit: 'msk', item: 'olive oil' },
       { amount: 50, unit: 'g', item: 'parmesan' },
     ],
-    steps: [
-      'Cook spaghetti according to package instructions.',
-      'Toss with lemon zest, lemon juice, olive oil, and parmesan.',
-      'Season with salt and pepper.',
-    ],
+    instructions: 'Cook spaghetti according to package instructions.\nToss with lemon zest, lemon juice, olive oil, and parmesan.\nSeason with salt and pepper.',
     prep_ahead_note: null,
     source: _url,
   }

@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { ChevronLeft, ChevronRight, X, UtensilsCrossed } from 'lucide-react'
+import { X, UtensilsCrossed } from 'lucide-react'
 import { formatAmount } from '../utils/fractions'
 
 export default function CookMode({ recipe, onExit }) {
-  const [step, setStep] = useState(0)
   const [showIngredients, setShowIngredients] = useState(false)
   const wakeLock = useRef(null)
 
@@ -16,59 +15,34 @@ export default function CookMode({ recipe, onExit }) {
     return () => { wakeLock.current?.release() }
   }, [])
 
-  const total = recipe.steps.length
-
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200">
         <span className="font-semibold text-gray-900 text-base">{recipe.title}</span>
-        <span className="text-sm text-gray-500">Step {step + 1}/{total}</span>
-        <button
-          aria-label="Exit"
-          onClick={onExit}
-          className="text-gray-400 hover:text-gray-700 transition-colors cursor-pointer border-0 bg-transparent p-1"
-        >
-          <X size={20} />
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            aria-label="Ingredients"
+            onClick={() => setShowIngredients(v => !v)}
+            className="text-gray-400 hover:text-gray-700 transition-colors cursor-pointer border-0 bg-transparent p-1"
+          >
+            <UtensilsCrossed size={20} />
+          </button>
+          <button
+            aria-label="Exit"
+            onClick={onExit}
+            className="text-gray-400 hover:text-gray-700 transition-colors cursor-pointer border-0 bg-transparent p-1"
+          >
+            <X size={20} />
+          </button>
+        </div>
       </div>
 
-      {/* Step text */}
-      <div className="flex-1 flex items-center justify-center px-8 py-10">
-        <p className="text-xl leading-relaxed text-center text-gray-800 max-w-xl">
-          {recipe.steps[step]}
+      {/* Instructions */}
+      <div className="flex-1 overflow-y-auto px-8 py-8">
+        <p className="text-lg leading-relaxed text-gray-800 whitespace-pre-wrap max-w-xl mx-auto">
+          {recipe.instructions}
         </p>
-      </div>
-
-      {/* Nav */}
-      <div className="flex items-center justify-between px-5 py-4 border-t border-gray-200">
-        <button
-          aria-label="Back"
-          onClick={() => setStep(s => s - 1)}
-          disabled={step === 0}
-          className="text-gray-500 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed
-                     transition-colors cursor-pointer border-0 bg-transparent p-2"
-        >
-          <ChevronLeft size={28} />
-        </button>
-
-        <button
-          aria-label={showIngredients ? 'Hide ingredients' : 'Ingredients'}
-          onClick={() => setShowIngredients(v => !v)}
-          className="text-gray-400 hover:text-gray-700 transition-colors cursor-pointer border-0 bg-transparent p-2"
-        >
-          <UtensilsCrossed size={20} />
-        </button>
-
-        <button
-          aria-label="Next"
-          onClick={() => setStep(s => s + 1)}
-          disabled={step === total - 1}
-          className="text-gray-500 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed
-                     transition-colors cursor-pointer border-0 bg-transparent p-2"
-        >
-          <ChevronRight size={28} />
-        </button>
       </div>
 
       {/* Ingredients panel */}
@@ -77,6 +51,7 @@ export default function CookMode({ recipe, onExit }) {
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-gray-800">Ingredients</h3>
             <button
+              aria-label="Hide ingredients"
               onClick={() => setShowIngredients(false)}
               className="text-gray-400 hover:text-gray-700 cursor-pointer border-0 bg-transparent p-1"
             >

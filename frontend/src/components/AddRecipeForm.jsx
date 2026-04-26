@@ -5,7 +5,6 @@ import ServingScaler from './ServingScaler'
 import { createRecipe, updateRecipe, importFromUrl, parseIngredients } from '../api'
 
 const emptyIngredient = () => ({ amount: '', unit: '', item: '' })
-const emptyStep = () => ''
 
 export default function AddRecipeForm({ initialRecipe } = {}) {
   const navigate = useNavigate()
@@ -27,7 +26,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
       item: ing.item ?? '',
     })) ?? [emptyIngredient()]
   )
-  const [steps, setSteps] = useState(initialRecipe?.steps ?? [emptyStep()])
+  const [instructions, setInstructions] = useState(initialRecipe?.instructions ?? '')
   const [urlInput, setUrlInput] = useState('')
   const [showParseModal, setShowParseModal] = useState(false)
   const [parseText, setParseText] = useState('')
@@ -47,18 +46,6 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
     setIngredients(prev => prev.filter((_, idx) => idx !== i))
   }
 
-  function updateStep(i, value) {
-    setSteps(prev => prev.map((s, idx) => idx === i ? value : s))
-  }
-
-  function addStep() {
-    setSteps(prev => [...prev, emptyStep()])
-  }
-
-  function removeStep(i) {
-    setSteps(prev => prev.filter((_, idx) => idx !== i))
-  }
-
   async function handleImport() {
     if (!urlInput) return
     setImporting(true)
@@ -76,7 +63,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
           item: ing.item ?? '',
         })))
       }
-      if (data.steps?.length) setSteps(data.steps)
+      if (data.instructions) setInstructions(data.instructions)
       if (data.prep_ahead_note) {
         setShowPrepAhead(true)
         setPrepAheadNote(data.prep_ahead_note)
@@ -119,7 +106,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
         unit: ing.unit,
         item: ing.item,
       })),
-      steps: steps.filter(Boolean),
+      instructions,
       ...(showTimes && prepTime && { prep_time: prepTime }),
       ...(showTimes && cookTime && { cook_time: cookTime }),
       ...(showPrepAhead && prepAheadNote && { prep_ahead_note: prepAheadNote }),
@@ -358,42 +345,17 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
           </div>
         </div>
 
-        {/* Steps */}
+        {/* How to */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-base font-semibold text-gray-800">Steps</h2>
-            <button
-              type="button"
-              aria-label="Add step"
-              onClick={addStep}
-              className={iconBtnCls}
-            >
-              <Plus size={16} />
-            </button>
-          </div>
-
-          <div className="space-y-2">
-            {steps.map((step, i) => (
-              <div key={i} className="grid gap-2 items-start" style={{ gridTemplateColumns: 'auto 1fr auto' }}>
-                <span className="text-sm text-gray-400 pt-2.5">{i + 1}.</span>
-                <textarea
-                  placeholder="Step"
-                  value={step}
-                  onChange={e => updateStep(i, e.target.value)}
-                  rows={2}
-                  className={inputCls}
-                />
-                <button
-                  type="button"
-                  aria-label="Remove step"
-                  onClick={() => removeStep(i)}
-                  className={`${iconBtnCls} mt-1`}
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+          <label htmlFor="instructions" className={labelCls}>How to</label>
+          <textarea
+            id="instructions"
+            placeholder="How to make this…"
+            value={instructions}
+            onChange={e => setInstructions(e.target.value)}
+            rows={8}
+            className={inputCls}
+          />
         </div>
 
         <div className="pt-2">

@@ -41,7 +41,7 @@ public class RecipeService {
         existing.setCookTime(updated.getCookTime());
         existing.setTags(updated.getTags());
         existing.setIngredients(updated.getIngredients());
-        existing.setSteps(updated.getSteps());
+        existing.setInstructions(updated.getInstructions());
         existing.setSource(updated.getSource());
         existing.setPrepAheadNote(updated.getPrepAheadNote());
         return repository.save(existing);

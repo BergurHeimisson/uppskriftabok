@@ -97,7 +97,7 @@ class RecipeControllerTest extends AbstractIntegrationTest {
         r.setServings(4);
         r.setTags(new String[]{"dinner"});
         r.setIngredients(List.of(new Ingredient(500.0, "g", "ground beef")));
-        r.setSteps(new String[]{"Mix ingredients.", "Cook."});
+        r.setInstructions("Mix ingredients.\nCook.");
         return r;
     }
 }

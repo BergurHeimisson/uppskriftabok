@@ -20,11 +20,7 @@ const recipe = {
     { amount: 1, unit: '', item: 'egg' },
     { amount: 0.5, unit: 'dl', item: 'breadcrumbs' },
   ],
-  steps: [
-    'Mix all ingredients together in a bowl.',
-    'Form into small balls.',
-    'Fry in butter on medium heat.',
-  ],
+  instructions: 'Mix all ingredients together in a bowl.\nForm into small balls.\nFry in butter on medium heat.',
 }
 
 function renderRecipe(id = 'r1') {
@@ -57,11 +53,10 @@ describe('Recipe page', () => {
     expect(screen.getByText('breadcrumbs')).toBeInTheDocument()
   })
 
-  it('shows all steps', async () => {
+  it('shows instructions text', async () => {
     renderRecipe()
     await waitFor(() => screen.getByText('Kjötbollar'))
-    expect(screen.getByText('Mix all ingredients together in a bowl.')).toBeInTheDocument()
-    expect(screen.getByText('Form into small balls.')).toBeInTheDocument()
+    expect(screen.getByText(/mix all ingredients together in a bowl/i)).toBeInTheDocument()
   })
 
   it('doubles ingredient amounts when servings are doubled', async () => {
@@ -164,14 +159,13 @@ describe('Recipe page', () => {
     expect(screen.getByRole('button', { name: /cook mode/i })).toBeInTheDocument()
   })
 
-  it('enters cook mode showing first step when Cook Mode is clicked', async () => {
+  it('enters cook mode showing instructions when Cook Mode is clicked', async () => {
     const user = userEvent.setup()
     renderRecipe()
     await waitFor(() => screen.getByText('Kjötbollar'))
 
     await user.click(screen.getByRole('button', { name: /cook mode/i }))
 
-    expect(screen.getByText('Mix all ingredients together in a bowl.')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument()
+    expect(screen.getByText(/mix all ingredients together in a bowl/i)).toBeInTheDocument()
   })
 })

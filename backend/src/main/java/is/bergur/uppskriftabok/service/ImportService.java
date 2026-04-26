@@ -85,14 +85,14 @@ public class ImportService {
         if (!rawIngredients.isEmpty()) recipe.setIngredients(IngredientParser.parse(rawIngredients));
 
         List<String> steps = new ArrayList<>();
-        JsonNode instructions = node.path("recipeInstructions");
-        if (instructions.isArray()) {
-            for (JsonNode step : instructions) {
+        JsonNode recipeInstructions = node.path("recipeInstructions");
+        if (recipeInstructions.isArray()) {
+            for (JsonNode step : recipeInstructions) {
                 String text = step.isTextual() ? step.asText() : step.path("text").asText(null);
                 if (text != null && !text.isBlank()) steps.add(text.trim());
             }
         }
-        if (!steps.isEmpty()) recipe.setSteps(steps.toArray(new String[0]));
+        if (!steps.isEmpty()) recipe.setInstructions(String.join("\n", steps));
 
         return recipe.getTitle() != null ? recipe : null;
     }

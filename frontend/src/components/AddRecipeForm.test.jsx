@@ -16,7 +16,7 @@ const existingRecipe = {
   cook_time: '20 min',
   prep_ahead_note: null,
   ingredients: [{ amount: 500, unit: 'g', item: 'ground beef' }],
-  steps: ['Mix ingredients.', 'Cook.'],
+  instructions: 'Mix ingredients.\nCook.',
 }
 
 beforeEach(() => {
@@ -29,7 +29,7 @@ beforeEach(() => {
     servings: 4,
     tags: ['baking'],
     ingredients: [{ amount: 100, unit: 'g', item: 'flour' }],
-    steps: ['Mix', 'Bake'],
+    instructions: 'Mix\nBake',
     prep_ahead_note: null,
   })
   api.parseIngredients.mockResolvedValue([
@@ -80,16 +80,9 @@ describe('AddRecipeForm', () => {
     expect(screen.getAllByPlaceholderText(/^item$/i)).toHaveLength(1)
   })
 
-  it('starts with one step row', () => {
+  it('has a How to textarea', () => {
     renderForm()
-    expect(screen.getAllByPlaceholderText(/^step$/i)).toHaveLength(1)
-  })
-
-  it('adds a new step row when + is clicked', async () => {
-    const user = userEvent.setup()
-    renderForm()
-    await user.click(screen.getByRole('button', { name: /add step/i }))
-    expect(screen.getAllByPlaceholderText(/^step$/i)).toHaveLength(2)
+    expect(screen.getByPlaceholderText(/how to/i)).toBeInTheDocument()
   })
 
   it('shows prep/cook time fields when checkbox is checked', async () => {
@@ -213,9 +206,9 @@ describe('AddRecipeForm in edit mode', () => {
     expect(screen.getByDisplayValue('500')).toBeInTheDocument()
   })
 
-  it('pre-fills step rows', () => {
+  it('pre-fills instructions textarea', () => {
     renderEditForm()
-    expect(screen.getByDisplayValue('Mix ingredients.')).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /how to/i })).toHaveValue('Mix ingredients.\nCook.')
   })
 
   it('shows prep/cook time fields when recipe has times', () => {

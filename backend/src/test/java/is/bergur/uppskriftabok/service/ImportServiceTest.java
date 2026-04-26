@@ -43,7 +43,7 @@ class ImportServiceTest extends AbstractIntegrationTest {
         assertThat(recipe.getServings()).isEqualTo(4);
         assertThat(recipe.getIngredients()).hasSize(2);
         assertThat(recipe.getIngredients().getFirst().unit()).isEqualTo("g");
-        assertThat(recipe.getSteps()).hasSize(2);
+        assertThat(recipe.getInstructions()).contains("Cook the beef");
         assertThat(recipe.getSource()).isEqualTo("https://example.com/recipe");
     }
 

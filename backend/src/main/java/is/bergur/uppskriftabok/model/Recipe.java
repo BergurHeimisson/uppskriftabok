@@ -36,8 +36,8 @@ public class Recipe {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<Ingredient> ingredients;
 
-    @Column(columnDefinition = "text[]")
-    private String[] steps;
+    @Column(columnDefinition = "text")
+    private String instructions;
 
     private String source;
 
@@ -76,8 +76,8 @@ public class Recipe {
     public List<Ingredient> getIngredients() { return ingredients; }
     public void setIngredients(List<Ingredient> ingredients) { this.ingredients = ingredients; }
 
-    public String[] getSteps() { return steps; }
-    public void setSteps(String[] steps) { this.steps = steps; }
+    public String getInstructions() { return instructions; }
+    public void setInstructions(String instructions) { this.instructions = instructions; }
 
     public String getSource() { return source; }
     public void setSource(String source) { this.source = source; }
