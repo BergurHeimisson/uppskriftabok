@@ -23,10 +23,10 @@ describe('CookMode', () => {
     expect(screen.getByText(/mix all ingredients/i)).toBeInTheDocument()
   })
 
-  it('shows ingredient list when Ingredients button is clicked', async () => {
+  it('shows ingredient list when Hráefni button is clicked', async () => {
     const user = userEvent.setup()
     renderCook()
-    await user.click(screen.getByRole('button', { name: /^ingredients$/i }))
+    await user.click(screen.getByRole('button', { name: /^hráefni$/i }))
     expect(screen.getByText('ground beef')).toBeInTheDocument()
     expect(screen.getByText('egg')).toBeInTheDocument()
   })
@@ -34,7 +34,7 @@ describe('CookMode', () => {
   it('hides ingredient list after it is shown and toggled again', async () => {
     const user = userEvent.setup()
     renderCook()
-    await user.click(screen.getByRole('button', { name: /^ingredients$/i }))
+    await user.click(screen.getByRole('button', { name: /^hráefni$/i }))
     await user.click(screen.getByRole('button', { name: /hide ingredients/i }))
     expect(screen.queryByText('ground beef')).not.toBeInTheDocument()
   })

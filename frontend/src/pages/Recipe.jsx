@@ -78,7 +78,7 @@ export default function Recipe() {
       <ServingScaler baseServings={recipe.servings} onChange={setServings} />
 
       <section className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">Ingredients</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-3">Hráefni</h2>
         <ul className="space-y-1.5 list-none p-0">
           {recipe.ingredients.map((ing, i) => (
             <li key={i} className="flex items-center gap-2">

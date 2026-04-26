@@ -22,7 +22,7 @@ export default function CookMode({ recipe, onExit }) {
         <span className="font-semibold text-gray-900 text-base">{recipe.title}</span>
         <div className="flex items-center gap-3">
           <button
-            aria-label="Ingredients"
+            aria-label="Hráefni"
             onClick={() => setShowIngredients(v => !v)}
             className="text-gray-400 hover:text-gray-700 transition-colors cursor-pointer border-0 bg-transparent p-1"
           >
@@ -49,7 +49,7 @@ export default function CookMode({ recipe, onExit }) {
       {showIngredients && (
         <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-5 py-4 max-h-[50vh] overflow-y-auto">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-gray-800">Ingredients</h3>
+            <h3 className="font-semibold text-gray-800">Hráefni</h3>
             <button
               aria-label="Hide ingredients"
               onClick={() => setShowIngredients(false)}

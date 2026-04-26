@@ -18,7 +18,7 @@ export default function ServingScaler({ baseServings, onChange }) {
 
   return (
     <div className="flex items-center gap-1.5 my-3">
-      <span className="text-sm text-gray-500 mr-1">Servings:</span>
+      <span className="text-sm text-gray-500 mr-1">Fjöldi:</span>
       {PRESETS.map(p => (
         <button
           key={p}
