@@ -54,7 +54,7 @@ describe('AddRecipeForm', () => {
 
   it('has serving size preset buttons', () => {
     renderForm()
-    ;[2, 4, 6, 8].forEach(n =>
+    ;[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach(n =>
       expect(screen.getByRole('button', { name: String(n) })).toBeInTheDocument()
     )
   })

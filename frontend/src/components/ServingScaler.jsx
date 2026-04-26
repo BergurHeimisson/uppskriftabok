@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const PRESETS = [2, 4, 6, 8]
+const PRESETS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 function nearestPreset(n) {
   return PRESETS.reduce((best, p) =>

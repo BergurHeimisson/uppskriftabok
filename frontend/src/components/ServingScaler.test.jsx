@@ -3,9 +3,9 @@ import userEvent from '@testing-library/user-event'
 import ServingScaler from './ServingScaler'
 
 describe('ServingScaler', () => {
-  it('renders preset buttons 2, 4, 6, 8', () => {
+  it('renders preset buttons 1 through 10', () => {
     render(<ServingScaler baseServings={4} onChange={() => {}} />)
-    ;[2, 4, 6, 8].forEach(n =>
+    ;[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach(n =>
       expect(screen.getByRole('button', { name: String(n) })).toBeInTheDocument()
     )
   })
@@ -32,13 +32,13 @@ describe('ServingScaler', () => {
     expect(screen.getByRole('button', { name: '4' })).toHaveAttribute('aria-pressed', 'false')
   })
 
-  it('clamps base servings below range to 2', () => {
-    render(<ServingScaler baseServings={1} onChange={() => {}} />)
-    expect(screen.getByRole('button', { name: '2' })).toHaveAttribute('aria-pressed', 'true')
+  it('clamps base servings below range to 1', () => {
+    render(<ServingScaler baseServings={0} onChange={() => {}} />)
+    expect(screen.getByRole('button', { name: '1' })).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('clamps base servings above range to 8', () => {
-    render(<ServingScaler baseServings={9} onChange={() => {}} />)
-    expect(screen.getByRole('button', { name: '8' })).toHaveAttribute('aria-pressed', 'true')
+  it('clamps base servings above range to 10', () => {
+    render(<ServingScaler baseServings={11} onChange={() => {}} />)
+    expect(screen.getByRole('button', { name: '10' })).toHaveAttribute('aria-pressed', 'true')
   })
 })
