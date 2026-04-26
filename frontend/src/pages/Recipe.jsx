@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, ChefHat, Trash2, ShoppingCart, Check, Pencil } from 'lucide-react'
+import { ArrowLeft, Trash2, ShoppingCart, Check, Pencil } from 'lucide-react'
 import { getRecipe, deleteRecipe, addToGrocery } from '../api'
 import ServingScaler from '../components/ServingScaler'
-import CookMode from '../components/CookMode'
 import { formatAmount } from '../utils/fractions'
 
 export default function Recipe() {
@@ -11,7 +10,6 @@ export default function Recipe() {
   const navigate = useNavigate()
   const [recipe, setRecipe] = useState(null)
   const [servings, setServings] = useState(null)
-  const [cookMode, setCookMode] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [addedToGrocery, setAddedToGrocery] = useState(new Set())
 
@@ -27,10 +25,6 @@ export default function Recipe() {
       <p className="text-gray-500">Loading…</p>
     </main>
   )
-
-  if (cookMode) {
-    return <CookMode recipe={recipe} onExit={() => setCookMode(false)} />
-  }
 
   const scale = servings / recipe.servings
 
@@ -112,16 +106,6 @@ export default function Recipe() {
           <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{recipe.instructions}</p>
         </section>
       )}
-
-      <button
-        onClick={() => setCookMode(true)}
-        aria-label="Cook Mode"
-        className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-full
-                   text-sm font-medium hover:bg-amber-600 transition-colors cursor-pointer border-0"
-      >
-        <ChefHat size={16} />
-        Cook Mode
-      </button>
 
       <div className="mt-12 pt-6 border-t border-gray-100">
         {!confirmDelete ? (

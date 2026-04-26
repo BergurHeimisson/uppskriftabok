@@ -153,19 +153,4 @@ describe('Recipe page', () => {
     await waitFor(() => expect(screen.getByText('Home page')).toBeInTheDocument())
   })
 
-  it('has a Cook Mode button', async () => {
-    renderRecipe()
-    await waitFor(() => screen.getByText('Kjötbollar'))
-    expect(screen.getByRole('button', { name: /cook mode/i })).toBeInTheDocument()
-  })
-
-  it('enters cook mode showing instructions when Cook Mode is clicked', async () => {
-    const user = userEvent.setup()
-    renderRecipe()
-    await waitFor(() => screen.getByText('Kjötbollar'))
-
-    await user.click(screen.getByRole('button', { name: /cook mode/i }))
-
-    expect(screen.getByText(/mix all ingredients together in a bowl/i)).toBeInTheDocument()
-  })
 })
