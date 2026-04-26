@@ -111,23 +111,23 @@ export default function Recipe() {
         {!confirmDelete ? (
           <button
             onClick={() => setConfirmDelete(true)}
-            aria-label="Delete recipe"
+            aria-label="Eyða uppskrift"
             className="inline-flex items-center gap-2 px-4 py-2 text-red-500 rounded-full
                        text-sm font-medium hover:bg-red-50 transition-colors cursor-pointer border border-red-200"
           >
             <Trash2 size={15} />
-            Delete recipe
+            Eyða uppskrift
           </button>
         ) : (
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600">Delete this recipe?</span>
+            <span className="text-sm text-gray-600">Eyða uppskrift?</span>
             <button
               onClick={handleDelete}
-              aria-label="Yes, delete"
+              aria-label="Já, eyða"
               className="px-3 py-1.5 bg-red-500 text-white rounded-full text-sm font-medium
                          hover:bg-red-600 transition-colors cursor-pointer border-0"
             >
-              Yes, delete
+              Já, eyða
             </button>
             <button
               onClick={() => setConfirmDelete(false)}

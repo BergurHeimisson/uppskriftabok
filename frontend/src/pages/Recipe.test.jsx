@@ -116,7 +116,7 @@ describe('Recipe page', () => {
   it('has a delete button', async () => {
     renderRecipe()
     await waitFor(() => screen.getByText('Kjötbollar'))
-    expect(screen.getByRole('button', { name: /delete recipe/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /eyða uppskrift/i })).toBeInTheDocument()
   })
 
   it('shows confirmation when delete is clicked', async () => {
@@ -124,8 +124,8 @@ describe('Recipe page', () => {
     renderRecipe()
     await waitFor(() => screen.getByText('Kjötbollar'))
 
-    await user.click(screen.getByRole('button', { name: /delete recipe/i }))
-    expect(screen.getByRole('button', { name: /yes, delete/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /eyða uppskrift/i }))
+    expect(screen.getByRole('button', { name: /já, eyða/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument()
   })
 
@@ -134,10 +134,10 @@ describe('Recipe page', () => {
     renderRecipe()
     await waitFor(() => screen.getByText('Kjötbollar'))
 
-    await user.click(screen.getByRole('button', { name: /delete recipe/i }))
+    await user.click(screen.getByRole('button', { name: /eyða uppskrift/i }))
     await user.click(screen.getByRole('button', { name: /cancel/i }))
-    expect(screen.queryByRole('button', { name: /yes, delete/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /delete recipe/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /já, eyða/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /eyða uppskrift/i })).toBeInTheDocument()
   })
 
   it('calls deleteRecipe and navigates home on confirm', async () => {
@@ -146,8 +146,8 @@ describe('Recipe page', () => {
     renderRecipe()
     await waitFor(() => screen.getByText('Kjötbollar'))
 
-    await user.click(screen.getByRole('button', { name: /delete recipe/i }))
-    await user.click(screen.getByRole('button', { name: /yes, delete/i }))
+    await user.click(screen.getByRole('button', { name: /eyða uppskrift/i }))
+    await user.click(screen.getByRole('button', { name: /já, eyða/i }))
 
     expect(api.deleteRecipe).toHaveBeenCalledWith('r1')
     await waitFor(() => expect(screen.getByText('Home page')).toBeInTheDocument())
