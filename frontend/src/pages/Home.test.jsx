@@ -81,18 +81,6 @@ describe('Home page', () => {
     expect(screen.queryByText('Hummus')).not.toBeInTheDocument()
   })
 
-  it('shows only plan-ahead recipes when Plan ahead filter is active', async () => {
-    const user = userEvent.setup()
-    renderHome()
-    await waitFor(() => screen.getByText('Kjötbollar'))
-
-    await user.click(screen.getByRole('button', { name: /plan ahead/i }))
-
-    expect(screen.getByText('Baguette')).toBeInTheDocument()
-    expect(screen.queryByText('Kjötbollar')).not.toBeInTheDocument()
-    expect(screen.queryByText('Hummus')).not.toBeInTheDocument()
-  })
-
   it('restores full list when All button is clicked', async () => {
     const user = userEvent.setup()
     renderHome()

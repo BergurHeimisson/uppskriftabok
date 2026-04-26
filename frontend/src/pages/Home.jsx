@@ -8,7 +8,6 @@ export default function Home() {
   const [recipes, setRecipes] = useState([])
   const [search, setSearch] = useState('')
   const [activeTag, setActiveTag] = useState(null)
-  const [planAheadOnly, setPlanAheadOnly] = useState(false)
 
   useEffect(() => {
     getRecipes().then(setRecipes)
@@ -17,7 +16,6 @@ export default function Home() {
   const allTags = [...new Set(recipes.flatMap(r => r.tags))]
 
   const filtered = recipes.filter(r => {
-    if (planAheadOnly && !r.prep_ahead_note) return false
     if (activeTag && !r.tags.includes(activeTag)) return false
     if (search) {
       const q = search.toLowerCase()
@@ -32,7 +30,6 @@ export default function Home() {
 
   function resetFilters() {
     setActiveTag(null)
-    setPlanAheadOnly(false)
   }
 
   return (
@@ -69,24 +66,13 @@ export default function Home() {
       <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Filters">
         <button
           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer border-0
-            ${!activeTag && !planAheadOnly
+            ${!activeTag
               ? 'bg-amber-500 text-white'
               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           onClick={resetFilters}
         >
           All
-        </button>
-        <button
-          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer border-0
-            ${planAheadOnly
-              ? 'bg-amber-500 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          aria-pressed={planAheadOnly}
-          onClick={() => setPlanAheadOnly(v => !v)}
-        >
-          Plan ahead
         </button>
         {allTags.map(tag => (
           <button
