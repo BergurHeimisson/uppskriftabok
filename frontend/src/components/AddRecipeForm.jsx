@@ -164,7 +164,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
             id="title"
             type="text"
             value={title}
-            onChange={e => setTitle(e.target.value)}
+            onChange={e => { const v = e.target.value; setTitle(v.charAt(0).toUpperCase() + v.slice(1)) }}
             required
             className={inputCls}
           />
