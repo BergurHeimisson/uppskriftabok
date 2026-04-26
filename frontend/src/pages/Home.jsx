@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
       <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-        <h1 className="text-xl font-bold text-gray-900">Uppskriftabók</h1>
+        <h1 className="text-xl font-bold text-gray-900">Uppskriftapunktar</h1>
         <div className="flex items-center gap-3">
           <Link
             to="/grocery"

@@ -22,7 +22,7 @@ function renderAt(path) {
 describe('App routing', () => {
   it('renders the home page at /', async () => {
     renderAt('/')
-    await waitFor(() => expect(screen.getByText('Uppskriftabók')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('Uppskriftapunktar')).toBeInTheDocument())
   })
 
   it('renders the Add Recipe page at /add', () => {
@@ -39,6 +39,6 @@ describe('App routing', () => {
 
   it('redirects unknown paths to home', async () => {
     renderAt('/unknown-path')
-    await waitFor(() => expect(screen.getByText('Uppskriftabók')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('Uppskriftapunktar')).toBeInTheDocument())
   })
 })
