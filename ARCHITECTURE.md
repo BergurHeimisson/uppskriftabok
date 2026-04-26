@@ -62,6 +62,7 @@ model/        JPA entities and value types
 
 - `V1__create_recipes.sql` — `recipes` table, `ingredients` stored as JSONB
 - `V2__create_grocery_items.sql` — `grocery_items` table with nullable `recipe_id` FK
+- `V3__steps_to_instructions.sql` — replaces `steps TEXT[]` with `instructions TEXT`
 
 **Why JSONB for ingredients?** Recipes are stored in multiple languages (Icelandic, English, etc.). "Hveiti" and "Flour" are the same ingredient but different strings — normalising them into a relational table would require a multilingual ingredient dictionary. JSONB keeps the data self-contained per recipe.
 

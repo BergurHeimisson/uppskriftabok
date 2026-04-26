@@ -52,7 +52,7 @@ Full details are in `ARCHITECTURE.md`. Key points for day-to-day work:
 - `controller/` — HTTP mapping only, delegates to service
 - `service/` — business logic; `RecipeService`, `GroceryService`, `ImportService`, `IngredientParser`
 - `repository/` — Spring Data JPA interfaces
-- `model/` — JPA entities; `Recipe` stores `ingredients` as JSONB (`List<Ingredient>`), not a join table
+- `model/` — JPA entities; `Recipe` stores `ingredients` as JSONB (`List<Ingredient>`), not a join table; `instructions` is plain `TEXT`
 
 **Frontend layout** (`src/`):
 - `pages/` — route-level components (`Home`, `Recipe`, `Add`, `Edit`, `Grocery`)
@@ -75,6 +75,8 @@ Full details are in `ARCHITECTURE.md`. Key points for day-to-day work:
 ## Key Constraints and Non-obvious Decisions
 
 **JSONB for ingredients:** Recipes can be stored in any language (Icelandic, English, etc.). "Hveiti" and "Flour" are the same ingredient — normalising into a relational table would require a multilingual dictionary. JSONB keeps ingredients self-contained per recipe. Never introduce a `recipe_ingredients` table.
+
+**Free-text instructions:** `Recipe.instructions` is a single `TEXT` field, not an array. The app is a personal "wall" — a reminder, not a step-by-step guide. The edit form has one textarea; the recipe page and cook mode render it with `whitespace-pre-wrap`.
 
 **Grocery FK is nullable:** `grocery_items.recipe_id` is `REFERENCES recipes(id) ON DELETE SET NULL`. Deleting a recipe leaves the grocery items intact with `recipe_id = NULL`.
 
