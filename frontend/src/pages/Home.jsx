@@ -72,7 +72,7 @@ export default function Home() {
             }`}
           onClick={resetFilters}
         >
-          All
+          Allar
         </button>
         {allTags.map(tag => (
           <button

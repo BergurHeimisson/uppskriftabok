@@ -87,7 +87,7 @@ describe('Home page', () => {
     await waitFor(() => screen.getByText('Kjötbollar'))
 
     await user.click(screen.getByRole('button', { name: /baking/i }))
-    await user.click(screen.getByRole('button', { name: /^all$/i }))
+    await user.click(screen.getByRole('button', { name: /^allar$/i }))
 
     expect(screen.getByText('Kjötbollar')).toBeInTheDocument()
     expect(screen.getByText('Hummus')).toBeInTheDocument()
