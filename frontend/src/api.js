@@ -76,3 +76,28 @@ export async function clearAllGroceryItems() {
   const res = await fetch(`${BASE}/grocery`, { method: 'DELETE' })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
 }
+
+export async function getMenus() {
+  return json(await fetch(`${BASE}/menus`))
+}
+
+export async function getMenu(id) {
+  return json(await fetch(`${BASE}/menus/${id}`))
+}
+
+export async function createMenu(data) {
+  return json(await fetch(`${BASE}/menus`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }))
+}
+
+export async function deleteMenu(id) {
+  const res = await fetch(`${BASE}/menus/${id}`, { method: 'DELETE' })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+}
+
+export async function addMenuToGrocery(id) {
+  return json(await fetch(`${BASE}/menus/${id}/grocery`, { method: 'POST' }))
+}

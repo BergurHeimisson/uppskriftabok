@@ -5,12 +5,12 @@ Mobile-first. All views are single-column, touch-friendly.
 ### Home — Recipe List
 ```
 +-----------------------------+
-|  Uppskriftabok          [+] |
+|  Uppskriftabok   [⚔] [🛒] [+] |
 +-----------------------------+
-| [?] Search recipes...       |
+| [?] Leita...                |
 +-----------------------------+
-| [All] [Dinner] [Soup]       |
-| [Baking] [Plan ahead]       |
+| [allar] [kvöldmatur] [súpa] |
+| [bakstur] [plan ahead]      |
 +-----------------------------+
 | +-------------------------+ |
 | | Kjotbollar              | |
@@ -86,20 +86,19 @@ Mobile-first. All views are single-column, touch-friendly.
 | +-------------------------+ |
 | |                         | |
 | +-------------------------+ |
-| Base servings               |
-| [2] [4] [6] [8]             |
-| Tags (comma separated)      |
+| [1][2][3][4][5][6][7][8][9][10] |
+| Flokkar (með kommu á milli) |
 | +-------------------------+ |
 | |                         | |
 | +-------------------------+ |
-| [ ] Add prep/cook times     |
+| [ ] Bæta við undirbúningstíma / forsuðu |
 | +----------+  +----------+  | <- appears when checked
-| | 15 min   |  | 30 min   |  |
+| | 15 mín   |  | 30 mín   |  |
 | +----------+  +----------+  |
 +-----------------------------+
-| [ ] Requires advance prep   |
+| [ ] Þarfnast sérstakts undirbúnings |
 | +-------------------------+ | <- appears when checked
-| | Dough must rest...      | |
+| | Deigið þarf að hvíla... | |
 | +-------------------------+ |
 +-----------------------------+
 | Ingredients              [+]|
@@ -118,25 +117,86 @@ Mobile-first. All views are single-column, touch-friendly.
 | |                         | |
 | +-------------------------+ |
 +-----------------------------+
-|        [ Save Recipe ]      |
+|           [ Geyma ]         |
 +-----------------------------+
 ```
 
-### Grocery List
+### Innkaupalisti (Grocery List)
 ```
 +-----------------------------+
-|  Grocery List               |
+|  Innkaupalisti              |
 +-----------------------------+
-| From: Kjotbollar            |
-| [x] 500 g ground beef       |
+| From: Kjötbollar            |
+| [x] 500 g hakkað nautakjöt  |
 | [ ] 1 egg                   |
-| [ ] 1/2 dl breadcrumbs      |
+| [ ] 1/2 dl brauðmylsna      |
 |                             |
 | From: Hummus                |
-| [ ] 400 g chickpeas         |
-| [ ] 2 tbsp tahini           |
+| [ ] 400 g kjúklingabaunir   |
+| [ ] 2 msk tahini            |
 +-----------------------------+
 | [Clear done]    [Clear all] |
++-----------------------------+
+```
+
+### Matseðlar (Menus List)
+```
++-----------------------------+
+| < Matseðlar              [+]|
++-----------------------------+
+| Jólakveðjur 2025            |
+| 2025-12-22 · 8 gestir  2 ↗  |
++-----------------------------+
+| Kvöldmatur með vinum        |
+| 2025-11-10 · 6 gestir  3 ↗  |
++-----------------------------+
+| Enginn matseðill til.       |
+| Búðu til þinn fyrsta.       |
++-----------------------------+
+```
+
+### Nýr matseðill (New Menu)
+```
++-----------------------------+
+| < Nýr matseðill             |
++-----------------------------+
+| Nafn matseðils              |
+| +-------------------------+ |
+| | t.d. Jólakveðjur 2025   | |
+| +-------------------------+ |
+| Fjöldi gesta                |
+| +------+                    |
+| |  8   |                    |
+| +------+                    |
+| Uppskriftir                 |
+| [?] Leita...                |
+| +-------------------------+ |
+| | [✓] Kjötbollar          | |
+| | [ ] Baguette            | |
+| | [✓] Hummus              | |
+| +-------------------------+ |
+| 2 uppskriftir valdar        |
++-----------------------------+
+|           [ Vista ]         |
++-----------------------------+
+```
+
+### Matseðill (Menu Detail)
+```
++-----------------------------+
+| < Jólakveðjur 2025     [🗑] |
+| 2025-12-22 · 8 gestir       |
++-----------------------------+
+| +-------------------------+ |
+| | Kjötbollar              | |
+| | #kvöldmatur #íslenskt   | |
+| +-------------------------+ |
+| +-------------------------+ |
+| | Hummus                  | |
+| | #foréttur #grænmetis    | |
+| +-------------------------+ |
++-----------------------------+
+|  [Senda á innkaupalista]    |
 +-----------------------------+
 ```
 

@@ -1,6 +1,6 @@
 # Uppskriftabók
 
-A mobile-friendly personal recipe book. Add recipes manually or import from a URL, scale servings, cook step-by-step, and manage a grocery list.
+A mobile-friendly personal recipe book. Add recipes manually or import from a URL, scale servings, cook step-by-step, manage a grocery list, and plan dinner menus with guest-count scaling.
 
 Live at [bergurheimisson.org](https://bergurheimisson.org).
 
@@ -33,7 +33,7 @@ Vite proxies `/api/*` to `localhost:8080`. Set `VITE_USE_MOCK=true` in `.env.dev
 
 **Tests**
 ```bash
-cd backend && mvn test   # 30 integration tests, embedded PostgreSQL (no Docker needed)
+cd backend && mvn test   # integration tests, embedded PostgreSQL (no Docker needed)
 cd frontend && npm test  # Vitest unit tests
 ```
 
@@ -80,3 +80,8 @@ docker compose logs -f
 | PATCH | `/api/grocery/:id` | Toggle checked state |
 | DELETE | `/api/grocery/completed` | Clear checked items |
 | DELETE | `/api/grocery` | Clear all items |
+| GET | `/api/menus` | List all menus |
+| POST | `/api/menus` | Create menu |
+| GET | `/api/menus/:id` | Get menu with full recipe list |
+| DELETE | `/api/menus/:id` | Delete menu |
+| POST | `/api/menus/:id/grocery` | Push all ingredients (guest-scaled) to grocery list |

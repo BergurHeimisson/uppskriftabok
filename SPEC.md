@@ -22,10 +22,10 @@ Self-hosted via Docker Compose.
 - Offline / PWA support
 - Multi-user / authentication
 - Photos per recipe
-- Menu planner (deferred to Phase 2)
 - Print-friendly view
 - Icelandic language toggle
 - Meal planner (days of the week)
+- Shareable menu links
 
 ---
 
@@ -57,9 +57,16 @@ Self-hosted via Docker Compose.
 
 ### Grocery List
 1. On any recipe detail page, tap ingredients to add to grocery list
-2. Grocery list view: check off items while shopping
+2. Grocery list (Innkaupalisti) view: check off items while shopping
 3. Clear completed / clear all
 4. List persisted in PostgreSQL — survives refresh and device switch
+
+### Dinner Menu (Matseðill)
+1. Tap the utensils icon on Home → Menus list
+2. Create a menu: give it a name, set guest count, pick recipes from a searchable checkbox list
+3. Menu detail shows all selected recipes and the guest count
+4. Tap "Senda á innkaupalista" → all ingredients pushed to the grocery list, quantities scaled by `guestCount / recipe.servings`
+5. Past menus are listed with name, date, and guest count — recall what guests were served
 
 ### Cook Mode
 1. Fullscreen, minimal chrome
@@ -144,6 +151,15 @@ Self-hosted via Docker Compose.
 | checked     | BOOLEAN  | Default false                      |
 | added_at    | TIMESTAMP |                                   |
 
+### `menus`
+| Column       | Type    | Notes                                          |
+|--------------|---------|------------------------------------------------|
+| id           | UUID PK | Auto-generated                                 |
+| name         | TEXT    | Not null. E.g. "Jólakveðjur 2025"             |
+| date_created | DATE    | Set on creation                                |
+| guest_count  | INT     | Default 4. Drives ingredient scaling           |
+| recipe_ids   | JSONB   | Ordered list of recipe UUIDs                   |
+
 ---
 
 ## API Endpoints
@@ -162,6 +178,11 @@ Self-hosted via Docker Compose.
 | PATCH  | /api/grocery/:id         | Toggle checked state                     |
 | DELETE | /api/grocery/completed   | Clear checked items                      |
 | DELETE | /api/grocery             | Clear all items                          |
+| GET    | /api/menus               | List all menus                           |
+| POST   | /api/menus               | Create a menu (name, guestCount, recipeIds) |
+| GET    | /api/menus/:id           | Menu with embedded full recipe objects   |
+| DELETE | /api/menus/:id           | Delete a menu                            |
+| POST   | /api/menus/:id/grocery   | Push all ingredients (guest-scaled) to grocery list |
 
 ---
 
@@ -303,7 +324,11 @@ uppskriftabok/
         Home.jsx
         Recipe.jsx
         Add.jsx
+        Edit.jsx
         Grocery.jsx
+        Menus.jsx
+        MenuDetail.jsx
+        NewMenu.jsx
       App.jsx
       main.jsx
     vite.config.js            — proxy /api/* to localhost:8080
@@ -326,8 +351,9 @@ uppskriftabok/
     src/main/resources/
       db/migration/           — Flyway SQL files
         V1__create_recipes.sql
-        V2__create_ingredients.sql
-        V3__create_grocery_items.sql
+        V2__create_grocery_items.sql
+        V3__steps_to_instructions.sql
+        V4__create_menus.sql
       application.properties
 
   docker-compose.yml          — postgres + spring boot + nginx
@@ -348,13 +374,14 @@ uppskriftabok/
 
 ## MVP Scope
 
-1. Database schema + Flyway migrations for recipes, ingredients, grocery items
-2. Spring Boot REST API (CRUD for recipes, grocery list, import endpoint)
+1. Database schema + Flyway migrations for recipes, grocery items, menus
+2. Spring Boot REST API (CRUD for recipes, grocery list, menus, import endpoint)
 3. React frontend: Home (search + filter), Recipe Detail (scaler + cross-off), Add Recipe form
 4. Import from URL via Jsoup
-5. Grocery list (add from recipe, check off, clear)
+5. Grocery list / Innkaupalisti (add from recipe, check off, clear)
 6. Cook mode (fullscreen, step-by-step, wakeLock)
-7. Docker Compose setup for production
+7. Dinner menus (Matseðlar) — name, guest count, recipe picker, scaled grocery push
+8. Docker Compose setup for production
 
 No auth. No photos. No menu planner. No offline.
 
@@ -362,10 +389,10 @@ No auth. No photos. No menu planner. No offline.
 
 ## Phase 2 (Future)
 
-- Menu Planner: create a multi-course dinner menu, auto-scale ingredients to guest count,
-  combined de-duplicated grocery list, prep timeline, shareable link
 - Photo per recipe
 - Icelandic language toggle
 - Print-friendly view
 - Inline step timers
 - Family sharing / multi-user
+- Shareable menu links
+- Meal planner (days of the week)

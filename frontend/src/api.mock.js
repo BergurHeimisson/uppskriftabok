@@ -90,6 +90,17 @@ let groceryItems = [
 
 let nextGroceryId = 10
 
+let MENUS = [
+  {
+    id: 'm1',
+    name: 'Jólakveðjur 2024',
+    dateCreated: '2024-12-22',
+    guestCount: 8,
+    recipeIds: ['r1', 'r3'],
+  },
+]
+let nextMenuId = 2
+
 export async function getRecipes() {
   await delay()
   return RECIPES.map(({ id, title, tags, prep_time, cook_time, prep_ahead_note, ingredients }) => ({
@@ -190,4 +201,48 @@ export async function clearCompletedGroceryItems() {
 export async function clearAllGroceryItems() {
   await delay(200)
   groceryItems = []
+}
+
+export async function getMenus() {
+  await delay()
+  return MENUS.map(m => ({ ...m }))
+}
+
+export async function getMenu(id) {
+  await delay()
+  const menu = MENUS.find(m => m.id === id)
+  if (!menu) throw new Error('Menu not found')
+  const recipes = RECIPES.filter(r => menu.recipeIds.includes(r.id))
+  return { ...menu, recipes }
+}
+
+export async function createMenu(data) {
+  await delay(300)
+  const menu = { id: `m${nextMenuId++}`, dateCreated: new Date().toISOString().slice(0, 10), ...data }
+  MENUS.push(menu)
+  return menu
+}
+
+export async function deleteMenu(id) {
+  await delay(200)
+  const i = MENUS.findIndex(m => m.id === id)
+  if (i !== -1) MENUS.splice(i, 1)
+}
+
+export async function addMenuToGrocery(id) {
+  await delay(400)
+  const menu = MENUS.find(m => m.id === id)
+  if (!menu) throw new Error('Menu not found')
+  const recipes = RECIPES.filter(r => menu.recipeIds.includes(r.id))
+  const items = recipes.flatMap(r =>
+    (r.ingredients || []).map(ing => {
+      const scale = menu.guestCount / (r.servings || 1)
+      const scaled = ing.amount != null ? ing.amount * scale : null
+      const amtStr = scaled != null ? String(Math.round(scaled * 10) / 10) : ''
+      const label = [amtStr, ing.unit, ing.item].filter(Boolean).join(' ')
+      return { id: `g${nextGroceryId++}`, recipe_id: r.id, label, checked: false }
+    })
+  )
+  groceryItems.push(...items)
+  return items
 }

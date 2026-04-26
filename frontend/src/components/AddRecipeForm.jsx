@@ -182,13 +182,12 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
         </div>
 
         <div>
-          <label className={labelCls}>Base servings</label>
           <ServingScaler baseServings={servings} onChange={setServings} />
         </div>
 
         <div>
           <label htmlFor="tags" className={labelCls}>
-            Tags <span className="font-normal text-gray-400">(comma separated)</span>
+            Flokkar <span className="font-normal text-gray-400">(með kommu á milli)</span>
           </label>
           <input
             id="tags"
@@ -208,7 +207,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
               onChange={e => setShowTimes(e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-gray-700">Add prep/cook times</span>
+            <span className="text-sm text-gray-700">Bæta við undirbúningstíma / forsuðu</span>
           </label>
           {showTimes && (
             <div className="grid grid-cols-2 gap-2 mt-2">
@@ -238,7 +237,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
               onChange={e => setShowPrepAhead(e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-gray-700">Requires advance prep</span>
+            <span className="text-sm text-gray-700">Þarfnast sérstakts undirbúnings</span>
           </label>
           {showPrepAhead && (
             <input
@@ -366,7 +365,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
                        text-sm font-medium hover:bg-amber-600 transition-colors cursor-pointer border-0"
           >
             <BookmarkCheck size={16} />
-            Save
+            Geyma
           </button>
         </div>
       </form>

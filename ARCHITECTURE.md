@@ -52,9 +52,11 @@ model/        JPA entities and value types
 |-------|----------------|
 | `RecipeController` | CRUD for `/api/recipes` |
 | `GroceryController` | Grocery list operations |
+| `MenuController` | Menu CRUD + `POST /api/menus/:id/grocery` |
 | `ParseController` | `POST /api/parse-ingredients` |
 | `ImportController` | `POST /api/import?url=` |
 | `ImportService` | Fetches URL via `PageFetcher`, parses JSON-LD then Open Graph |
+| `MenuService` | Menu logic; scales ingredient amounts by `guestCount / recipe.servings` when building grocery labels |
 | `IngredientParser` | Regex-based parser shared by import and free-text input |
 | `PageFetcher` | Interface over Jsoup HTTP — `JsoupPageFetcher` in production, stub in tests |
 
@@ -63,6 +65,7 @@ model/        JPA entities and value types
 - `V1__create_recipes.sql` — `recipes` table, `ingredients` stored as JSONB
 - `V2__create_grocery_items.sql` — `grocery_items` table with nullable `recipe_id` FK
 - `V3__steps_to_instructions.sql` — replaces `steps TEXT[]` with `instructions TEXT`
+- `V4__create_menus.sql` — `menus` table with `name`, `guest_count`, `recipe_ids` (JSONB), `date_created`
 
 **Why JSONB for ingredients?** Recipes are stored in multiple languages (Icelandic, English, etc.). "Hveiti" and "Flour" are the same ingredient but different strings — normalising them into a relational table would require a multilingual ingredient dictionary. JSONB keeps the data self-contained per recipe.
 
@@ -75,7 +78,7 @@ src/
   api.js          Real API client (fetch, BASE = '/api')
   api.mock.js     In-memory mock for development without backend
   components/     Reusable UI — AddRecipeForm, GroceryList, CookMode, ServingScaler, ...
-  pages/          Route-level components — Home, Recipe, Add, Edit, Grocery
+  pages/          Route-level components — Home, Recipe, Add, Edit, Grocery, Menus, MenuDetail, NewMenu
   utils/
     fractions.js  Client-side fraction formatting (0.5 → "1/2")
 ```

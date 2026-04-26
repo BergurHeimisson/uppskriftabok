@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Plus } from 'lucide-react'
+import { ShoppingCart, Plus, UtensilsCrossed } from 'lucide-react'
 import { getRecipes } from '../api'
 import RecipeCard from '../components/RecipeCard'
 
@@ -37,6 +37,13 @@ export default function Home() {
       <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
         <h1 className="text-xl font-bold text-gray-900">Uppskriftapunktar</h1>
         <div className="flex items-center gap-3">
+          <Link
+            to="/menus"
+            aria-label="Matseðlar"
+            className="text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            <UtensilsCrossed size={20} />
+          </Link>
           <Link
             to="/grocery"
             role="link"

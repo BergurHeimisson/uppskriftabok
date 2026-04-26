@@ -88,7 +88,7 @@ describe('AddRecipeForm', () => {
   it('shows prep/cook time fields when checkbox is checked', async () => {
     const user = userEvent.setup()
     renderForm()
-    await user.click(screen.getByLabelText(/add prep\/cook times/i))
+    await user.click(screen.getByLabelText(/Bæta við undirbúningstíma/i))
     expect(screen.getByPlaceholderText(/prep time/i)).toBeInTheDocument()
     expect(screen.getByPlaceholderText(/cook time/i)).toBeInTheDocument()
   })
@@ -96,7 +96,7 @@ describe('AddRecipeForm', () => {
   it('shows advance-prep note field when checkbox is checked', async () => {
     const user = userEvent.setup()
     renderForm()
-    await user.click(screen.getByLabelText(/requires advance prep/i))
+    await user.click(screen.getByLabelText(/Þarfnast sérstakts undirbúnings/i))
     expect(screen.getByPlaceholderText(/e\.g\. dough/i)).toBeInTheDocument()
   })
 

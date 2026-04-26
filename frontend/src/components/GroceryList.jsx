@@ -33,7 +33,7 @@ export default function GroceryList() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Grocery List</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Innkaupalisti</h1>
 
       {items.length === 0 ? (
         <p className="text-gray-500 text-sm">Your grocery list is empty.</p>
