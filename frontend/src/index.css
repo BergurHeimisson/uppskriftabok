@@ -29,3 +29,11 @@
     @apply block text-sm font-medium text-gray-700;
   }
 }
+
+.grid-recipe-cards {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.grid-ingredient-row {
+  grid-template-columns: 5rem 4.5rem 1fr auto;
+}

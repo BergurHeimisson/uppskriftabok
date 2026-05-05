@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Plus, UtensilsCrossed } from 'lucide-react'
+import { ShoppingCart, Plus, UtensilsCrossed, LogIn, LogOut, Settings } from 'lucide-react'
 import { getRecipes } from '../api'
 import RecipeCard from '../components/RecipeCard'
+import { useAuth } from '../context/AuthContext'
 
 export default function Home() {
+  const { user, logout } = useAuth()
   const [recipes, setRecipes] = useState([])
   const [search, setSearch] = useState('')
   const [activeTag, setActiveTag] = useState(null)
@@ -52,13 +54,41 @@ export default function Home() {
           >
             <ShoppingCart size={20} />
           </Link>
-          <Link
-            to="/add"
-            aria-label="+"
-            className="text-gray-500 hover:text-gray-900 transition-colors"
-          >
-            <Plus size={22} />
-          </Link>
+          {user && (
+            <Link
+              to="/add"
+              aria-label="+"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              <Plus size={22} />
+            </Link>
+          )}
+          {user?.role === 'ADMIN' && (
+            <Link
+              to="/admin"
+              aria-label="Admin"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              <Settings size={20} />
+            </Link>
+          )}
+          {user ? (
+            <button
+              onClick={logout}
+              aria-label="Log out"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              <LogOut size={20} />
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              aria-label="Log in"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              <LogIn size={20} />
+            </Link>
+          )}
         </div>
       </header>
 
@@ -103,7 +133,7 @@ export default function Home() {
           <Link to="/add" className="text-amber-600 hover:underline">Add a recipe</Link> or import from URL.
         </p>
       ) : (
-        <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}>
+        <div className="grid gap-3 grid-recipe-cards">
           {filtered.map(r => <RecipeCard key={r.id} recipe={r} />)}
         </div>
       )}

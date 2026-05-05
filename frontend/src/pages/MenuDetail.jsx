@@ -54,7 +54,7 @@ export default function MenuDetail() {
       {(menu.recipes || []).length === 0 ? (
         <p className="text-gray-400 text-sm">Engar uppskriftir í þessum matseðli.</p>
       ) : (
-        <div className="grid gap-3 mb-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}>
+        <div className="grid gap-3 mb-6 grid-recipe-cards">
           {menu.recipes.map(r => <RecipeCard key={r.id} recipe={r} />)}
         </div>
       )}

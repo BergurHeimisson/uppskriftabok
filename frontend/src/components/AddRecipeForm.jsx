@@ -309,7 +309,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
 
           <div className="space-y-2">
             {ingredients.map((ing, i) => (
-              <div key={i} className="grid gap-2 items-center" style={{ gridTemplateColumns: '5rem 4.5rem 1fr auto' }}>
+              <div key={i} className="grid gap-2 items-center grid-ingredient-row">
                 <input
                   type="number"
                   placeholder="Amount"

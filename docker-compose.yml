@@ -28,6 +28,22 @@ services:
     expose:
       - "8080"
 
+  auth-service:
+    build: ./auth-service
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/uppskriftabok
+      SPRING_DATASOURCE_USERNAME: uppskriftabok
+      SPRING_DATASOURCE_PASSWORD: uppskriftabok
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRY_SECONDS: ${JWT_EXPIRY_SECONDS:-14400}
+      REFRESH_TOKEN_EXPIRY_DAYS: ${REFRESH_TOKEN_EXPIRY_DAYS:-30}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - "8082"
+
   nginx:
     image: nginx:alpine
     restart: unless-stopped
@@ -40,6 +56,7 @@ services:
       - ./frontend/dist:/usr/share/nginx/html:ro
     depends_on:
       - backend
+      - auth-service
 
 volumes:
   postgres_data:

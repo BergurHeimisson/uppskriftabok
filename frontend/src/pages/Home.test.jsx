@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import Home from './Home'
 import * as api from '../api'
+import { AuthContext } from '../context/AuthContext'
 
 vi.mock('../api')
 
@@ -15,12 +16,18 @@ const recipes = [
     ingredients: [{ amount: 400, unit: 'g', item: 'chickpeas' }] },
 ]
 
+const loggedInUser = { username: 'bergur', role: 'MEMBER' }
+
 beforeEach(() => {
   api.getRecipes.mockResolvedValue(recipes)
 })
 
-function renderHome() {
-  return render(<MemoryRouter><Home /></MemoryRouter>)
+function renderHome(user = null) {
+  return render(
+    <AuthContext.Provider value={{ user, logout: vi.fn() }}>
+      <MemoryRouter><Home /></MemoryRouter>
+    </AuthContext.Provider>
+  )
 }
 
 describe('Home page', () => {
@@ -93,10 +100,16 @@ describe('Home page', () => {
     expect(screen.getByText('Hummus')).toBeInTheDocument()
   })
 
-  it('has an Add Recipe link', async () => {
-    renderHome()
+  it('shows Add Recipe link when logged in', async () => {
+    renderHome(loggedInUser)
     await waitFor(() => screen.getByText('Kjötbollar'))
     expect(screen.getByRole('link', { name: /\+/i })).toBeInTheDocument()
+  })
+
+  it('hides Add Recipe link when not logged in', async () => {
+    renderHome()
+    await waitFor(() => screen.getByText('Kjötbollar'))
+    expect(screen.queryByRole('link', { name: /\+/i })).not.toBeInTheDocument()
   })
 
   it('has a Grocery List link', async () => {

@@ -4,13 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-**Backend**
+**Backend (cookbook)**
 ```bash
 cd backend
 ./mvnw spring-boot:run          # start dev server on :8080
 mvn test                        # run all integration tests
 mvn test -Dtest=RecipeControllerTest   # run a single test class
 mvn test -Dtest=RecipeControllerTest#deleteRecipeReturns204AndIsGone  # single test method
+```
+
+**Auth service**
+```bash
+cd auth-service
+./mvnw spring-boot:run          # start dev server on :8082
+mvn test                        # run all integration tests (Zonky embedded DB, no Docker needed)
 ```
 
 **Frontend**
@@ -38,7 +45,10 @@ cd frontend && npm run build && docker compose restart nginx
 # Backend change
 docker compose up -d --build backend
 
-# Both
+# Auth-service change
+docker compose up -d --build auth-service
+
+# Both/all
 cd frontend && npm run build && cd .. && docker compose up -d --build
 ```
 
@@ -46,7 +56,14 @@ cd frontend && npm run build && cd .. && docker compose up -d --build
 
 Full details are in `ARCHITECTURE.md`. Key points for day-to-day work:
 
-**Request path:** Browser → Cloudflare Tunnel → cloudflared → Nginx :80 → Spring Boot :8080 → PostgreSQL :5432. In dev, Vite proxies `/api/*` directly to `:8080`, skipping Nginx.
+**Request path:** Browser → Cloudflare Tunnel → cloudflared → Nginx :80 → Spring Boot :8080 → PostgreSQL :5432. Write requests (`POST`/`PUT`/`PATCH`/`DELETE`) pass through an `auth_request` subrequest to auth-service :8082 before reaching the backend. In dev, Vite proxies `/api/*` directly to `:8080`, skipping Nginx and auth.
+
+**Auth-service layout** (`is.bergur.auth`):
+- `controller/` — `AuthController` (login, refresh, logout, validate) and `AdminController` (user CRUD)
+- `service/` — `JwtService`, `UserService` (BCrypt), `RefreshTokenService` (rotation)
+- `security/` — `SecurityConfig` (Spring Security 6, stateless) and `JwtAuthFilter` (`OncePerRequestFilter`)
+- `model/` — `User`, `RefreshToken` JPA entities
+- Flyway history table: `auth_flyway_schema_history` (separate from cookbook's `flyway_schema_history`)
 
 **Backend layout** (`is.bergur.uppskriftabok`):
 - `controller/` — HTTP mapping only, delegates to service
@@ -55,12 +72,13 @@ Full details are in `ARCHITECTURE.md`. Key points for day-to-day work:
 - `model/` — JPA entities; `Recipe` stores `ingredients` as JSONB (`List<Ingredient>`), not a join table; `instructions` is plain `TEXT`
 
 **Frontend layout** (`src/`):
-- `pages/` — route-level components (`Home`, `Recipe`, `Add`, `Edit`, `Grocery`)
+- `pages/` — route-level components (`Home`, `Recipe`, `Add`, `Edit`, `Grocery`, `Login`, `Admin`)
 - `components/` — reusable (`RecipeCard`, `AddRecipeForm`, `CookMode`, `ServingScaler`, `GroceryList`)
-- `api.js` — real API client; `api.mock.js` — in-memory mock with the same interface
+- `context/AuthContext.jsx` — JWT stored in React state (memory only, never localStorage); silent refresh on mount
+- `api.js` — real API client; module-level `_token` variable injected as `Authorization: Bearer` header on all write requests; `api.mock.js` — in-memory mock with the same interface
 - `utils/fractions.js` — client-side fraction formatting (serving scaler math stays in the browser)
 
-**Routes:** `/` Home, `/recipe/:id` Recipe detail, `/add` Add, `/recipe/:id/edit` Edit, `/grocery` Grocery list.
+**Routes:** `/` Home, `/recipe/:id` Recipe detail, `/add` Add, `/recipe/:id/edit` Edit, `/grocery` Grocery list, `/login` Login, `/admin` User management (ADMIN only).
 
 `AddRecipeForm` serves both create and edit: pass `initialRecipe` prop to pre-fill fields and switch to `PUT`. Without the prop it renders as "Add Recipe" and calls `POST`.
 
@@ -69,6 +87,8 @@ Full details are in `ARCHITECTURE.md`. Key points for day-to-day work:
 **Backend:** integration tests only — no unit tests for individual classes. All tests extend `AbstractIntegrationTest` which provides `@SpringBootTest(webEnvironment=RANDOM_PORT)` + `@AutoConfigureEmbeddedDatabase` (Zonky embedded PostgreSQL — no Docker required). Use `TestRestTemplate` for HTTP-level assertions; `@BeforeEach` cleans the repo.
 
 **Frontend:** Vitest + React Testing Library. Tests render components via their public output, not implementation details. Mock API is used throughout — do not introduce `jest.mock` for the API module.
+
+**Auth-service tests** follow the same pattern as the cookbook backend: integration tests only, `@SpringBootTest(webEnvironment=RANDOM_PORT)` + `@AutoConfigureEmbeddedDatabase` (Zonky). No Docker needed. Use `TestRestTemplate` for HTTP-level assertions.
 
 **TDD is mandatory.** Write a failing test first, then the minimum code to pass it.
 
@@ -89,3 +109,15 @@ Full details are in `ARCHITECTURE.md`. Key points for day-to-day work:
 **Cook mode:** Uses `navigator.wakeLock.request('screen')` to keep display on while cooking. Graceful fallback if unsupported.
 
 **Icons:** Use `lucide-react`. Prefer icons with `aria-label` over labelled button boxes.
+
+**Auth design — key invariants:**
+- JWT access token (4h TTL, HS256) lives in React state only — never `localStorage` or `sessionStorage`
+- Refresh token (30-day TTL) is httpOnly + Secure + SameSite=Strict cookie; JS cannot read it
+- Refresh tokens are stored as SHA-256 hashes in DB; raw token never persisted
+- Refresh token rotation: old token deleted on every use, new one issued
+- `JWT_SECRET` injected via Docker env var (`.env` file, git-ignored); never hardcoded
+- `/auth/validate` is the Nginx `auth_request` target: reads `X-Original-Method` header; GET/HEAD/OPTIONS pass immediately; writes require a valid Bearer JWT
+- Nginx rate-limits `/auth/` at 5 req/min per IP (`limit_req_zone login_zone`)
+- Flyway migration rule applies to auth-service too: never edit existing migration files; add new versioned files
+
+**Secrets:** `.env` at repo root holds `JWT_SECRET`, `DB_USER`, `DB_PASSWORD`. Never commit this file (it is in `.gitignore`). The V3 seed migration sets an initial admin password — change it via `/admin` immediately after first deploy.

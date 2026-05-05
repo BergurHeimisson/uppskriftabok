@@ -7,6 +7,8 @@ import Grocery from './pages/Grocery'
 import Menus from './pages/Menus'
 import MenuDetail from './pages/MenuDetail'
 import NewMenu from './pages/NewMenu'
+import Login from './pages/Login'
+import Admin from './pages/Admin'
 
 export default function App() {
   return (
@@ -19,6 +21,8 @@ export default function App() {
       <Route path="/menus" element={<Menus />} />
       <Route path="/menus/new" element={<NewMenu />} />
       <Route path="/menus/:id" element={<MenuDetail />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/admin" element={<Admin />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
