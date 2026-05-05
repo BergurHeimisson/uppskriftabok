@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Plus, UtensilsCrossed, LogIn, LogOut, Settings } from 'lucide-react'
+import { ShoppingCart, Plus, UtensilsCrossed, KeyRound, LogOut, Settings } from 'lucide-react'
 import { getRecipes } from '../api'
 import RecipeCard from '../components/RecipeCard'
 import { useAuth } from '../context/AuthContext'
@@ -86,7 +86,7 @@ export default function Home() {
               aria-label="Log in"
               className="text-gray-500 hover:text-gray-900 transition-colors"
             >
-              <LogIn size={20} />
+              <KeyRound size={20} />
             </Link>
           )}
         </div>
