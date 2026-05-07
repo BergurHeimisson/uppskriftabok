@@ -27,7 +27,7 @@ export default function Admin() {
 
   if (user?.role !== 'ADMIN') {
     return (
-      <main className="p-8 text-center text-gray-600">
+      <main className="p-8 text-center text-gray-600 dark:text-gray-400">
         Not authorized
       </main>
     )
@@ -71,10 +71,10 @@ export default function Admin() {
   return (
     <main className="max-w-2xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">User Management</h1>
         <button
           onClick={() => setShowForm(f => !f)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700"
+          className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
           aria-label="Add user"
         >
           Add User
@@ -82,26 +82,26 @@ export default function Admin() {
       </div>
 
       {error && (
-        <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+        <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
           {error}
         </div>
       )}
 
       {showForm && (
-        <form onSubmit={handleCreate} className="bg-gray-50 rounded-xl p-4 mb-6 space-y-3">
+        <form onSubmit={handleCreate} className="bg-gray-50 rounded-xl p-4 mb-6 space-y-3 dark:bg-gray-800 dark:border dark:border-gray-700">
           <div>
-            <label htmlFor="new-username" className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <label htmlFor="new-username" className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Username</label>
             <input
               id="new-username"
               aria-label="Username"
               value={newUsername}
               onChange={e => setNewUsername(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             />
           </div>
           <div>
-            <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Password</label>
             <input
               id="new-password"
               aria-label="Password"
@@ -109,16 +109,16 @@ export default function Admin() {
               value={newPassword}
               onChange={e => setNewPassword(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             />
           </div>
           <div>
-            <label htmlFor="new-role" className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <label htmlFor="new-role" className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Role</label>
             <select
               id="new-role"
               value={newRole}
               onChange={e => setNewRole(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
             >
               <option value="MEMBER">Member</option>
               <option value="ADMIN">Admin</option>
@@ -126,7 +126,7 @@ export default function Admin() {
           </div>
           <button
             type="submit"
-            className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700"
+            className="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-600"
           >
             Create
           </button>
@@ -135,16 +135,16 @@ export default function Admin() {
 
       <ul className="space-y-2">
         {users.map(u => (
-          <li key={u.id} className="bg-white border border-gray-200 rounded-xl px-4 py-3">
+          <li key={u.id} className="bg-white border border-gray-200 rounded-xl px-4 py-3 dark:bg-gray-800 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-medium text-gray-800">{u.username}</span>
-                <span className="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{u.role}</span>
+                <span className="font-medium text-gray-800 dark:text-gray-100">{u.username}</span>
+                <span className="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full dark:text-gray-400 dark:bg-gray-700">{u.role}</span>
               </div>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => { setResetingId(resetingId === u.id ? null : u.id); setResetPassword('') }}
-                  className="text-blue-500 hover:text-blue-700 text-sm"
+                  className="text-amber-500 hover:text-amber-600 text-sm"
                 >
                   Reset password
                 </button>
@@ -152,7 +152,7 @@ export default function Admin() {
                   <button
                     onClick={() => handleDelete(u.id)}
                     aria-label={`Delete ${u.username}`}
-                    className="text-red-500 hover:text-red-700 text-sm"
+                    className="text-red-500 hover:text-red-700 text-sm dark:hover:text-red-400"
                   >
                     Delete
                   </button>
@@ -171,18 +171,18 @@ export default function Admin() {
                   onChange={e => setResetPassword(e.target.value)}
                   required
                   placeholder="New password"
-                  className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
                 />
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-blue-700"
+                  className="bg-amber-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-amber-600"
                 >
                   Save
                 </button>
                 <button
                   type="button"
                   onClick={() => setResetingId(null)}
-                  className="text-gray-500 hover:text-gray-700 text-sm"
+                  className="text-gray-500 hover:text-gray-700 text-sm dark:text-gray-400 dark:hover:text-gray-300"
                 >
                   Cancel
                 </button>

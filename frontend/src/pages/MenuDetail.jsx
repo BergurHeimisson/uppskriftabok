@@ -32,14 +32,14 @@ export default function MenuDetail() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
-      <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+      <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-3">
           <Link to="/menus" aria-label="Til baka" className="text-gray-500 hover:text-gray-900 transition-colors">
             <ArrowLeft size={20} />
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{menu.name}</h1>
-            <p className="text-xs text-gray-400 mt-0.5">{menu.dateCreated} · {menu.guestCount} gestir</p>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{menu.name}</h1>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{menu.dateCreated} · {menu.guestCount} gestir</p>
           </div>
         </div>
         <button

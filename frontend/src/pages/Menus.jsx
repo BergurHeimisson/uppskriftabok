@@ -10,12 +10,12 @@ export default function Menus() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
-      <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+      <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-3">
           <Link to="/" aria-label="Til baka" className="text-gray-500 hover:text-gray-900 transition-colors">
             <ArrowLeft size={20} />
           </Link>
-          <h1 className="text-xl font-bold text-gray-900">Matseðlar</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Matseðlar</h1>
         </div>
         <Link
           to="/menus/new"
@@ -37,13 +37,13 @@ export default function Menus() {
             <li key={m.id}>
               <Link
                 to={`/menus/${m.id}`}
-                className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3 hover:shadow-sm transition-shadow"
+                className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3 hover:shadow-sm transition-shadow dark:bg-gray-800 dark:border-gray-700"
               >
                 <div>
-                  <p className="font-semibold text-gray-900">{m.name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{m.dateCreated} · {m.guestCount} gestir</p>
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">{m.name}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{m.dateCreated} · {m.guestCount} gestir</p>
                 </div>
-                <p className="text-sm text-gray-400">{(m.recipeIds || []).length} uppskriftir</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500">{(m.recipeIds || []).length} uppskriftir</p>
               </Link>
             </li>
           ))}

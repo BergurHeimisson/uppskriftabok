@@ -36,12 +36,12 @@ export default function Home() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
-      <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+      <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-3">
           <a href="/" aria-label="Home" className="text-gray-500 hover:text-gray-900 transition-colors">
             <House size={20} />
           </a>
-          <h1 className="text-xl font-bold text-gray-900">Uppskriftapunktar</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Uppskriftapunktar</h1>
         </div>
         <div className="flex items-center gap-3">
           <Link
@@ -110,7 +110,7 @@ export default function Home() {
           className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer border-0
             ${!activeTag
               ? 'bg-amber-500 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
             }`}
           onClick={resetFilters}
         >
@@ -122,7 +122,7 @@ export default function Home() {
             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer border-0
               ${activeTag === tag
                 ? 'bg-amber-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
               }`}
             aria-pressed={activeTag === tag}
             onClick={() => setActiveTag(t => t === tag ? null : tag)}
@@ -133,7 +133,7 @@ export default function Home() {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-500 text-sm dark:text-gray-400">
           No recipes yet.{' '}
           <Link to="/add" className="text-amber-600 hover:underline">Add a recipe</Link> or import from URL.
         </p>

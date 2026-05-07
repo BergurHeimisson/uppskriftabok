@@ -120,9 +120,9 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
     }
   }
 
-  const inputCls = 'border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent'
-  const labelCls = 'block text-sm font-medium text-gray-700 mb-1'
-  const iconBtnCls = 'text-gray-400 hover:text-gray-600 transition-colors cursor-pointer border-0 bg-transparent p-1 rounded'
+  const inputCls = 'border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100'
+  const labelCls = 'block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300'
+  const iconBtnCls = 'text-gray-400 hover:text-gray-600 transition-colors cursor-pointer border-0 bg-transparent p-1 rounded dark:text-gray-500 dark:hover:text-gray-300'
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-6">
@@ -130,11 +130,11 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
         <ArrowLeft size={15} />
         Til baka
       </Link>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">{isEdit ? 'Edit Recipe' : 'Add Recipe'}</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6 dark:text-gray-100">{isEdit ? 'Edit Recipe' : 'Add Recipe'}</h1>
 
       {/* URL import — create mode only */}
-      {!isEdit && <div className="mb-6 p-4 bg-white rounded-xl border border-gray-200">
-        <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">Import from URL</p>
+      {!isEdit && <div className="mb-6 p-4 bg-white rounded-xl border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2 dark:text-gray-500">Import from URL</p>
         <div className="flex gap-2 items-center">
           <input
             type="url"
@@ -207,7 +207,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
               onChange={e => setShowTimes(e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-gray-700">Bæta við undirbúningstíma / forsuðu</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">Bæta við undirbúningstíma / forsuðu</span>
           </label>
           {showTimes && (
             <div className="grid grid-cols-2 gap-2 mt-2">
@@ -237,7 +237,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
               onChange={e => setShowPrepAhead(e.target.checked)}
               className="w-4 h-4"
             />
-            <span className="text-sm text-gray-700">Þarfnast sérstakts undirbúnings</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">Þarfnast sérstakts undirbúnings</span>
           </label>
           {showPrepAhead && (
             <input
@@ -253,7 +253,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
         {/* Ingredients */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-base font-semibold text-gray-800">Hráefni</h2>
+            <h2 className="text-base font-semibold text-gray-800 dark:text-gray-200">Hráefni</h2>
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -275,7 +275,7 @@ export default function AddRecipeForm({ initialRecipe } = {}) {
           </div>
 
           {showParseModal && (
-            <div className="mb-3 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+            <div className="mb-3 p-3 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
               <label className={labelCls}>Paste ingredients (one per line):</label>
               <textarea
                 placeholder="Paste ingredients..."

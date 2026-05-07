@@ -18,7 +18,7 @@ export default function ServingScaler({ baseServings, onChange }) {
 
   return (
     <div className="flex items-center gap-1.5 my-3">
-      <span className="text-sm text-gray-500 mr-1">Fjöldi í mat:</span>
+      <span className="text-sm text-gray-500 mr-1 dark:text-gray-400">Fjöldi í mat:</span>
       {PRESETS.map(p => (
         <button
           key={p}
@@ -27,7 +27,7 @@ export default function ServingScaler({ baseServings, onChange }) {
           className={`w-9 h-9 rounded-full text-sm font-medium transition-colors cursor-pointer border-0
             ${selected === p
               ? 'bg-amber-500 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
             }`}
         >
           {p}

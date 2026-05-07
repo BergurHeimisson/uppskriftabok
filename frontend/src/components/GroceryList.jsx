@@ -33,21 +33,21 @@ export default function GroceryList() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
-      <header className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
-        <a href="/" aria-label="Home" className="text-gray-500 hover:text-gray-900 transition-colors">
+      <header className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <a href="/" aria-label="Home" className="text-gray-500 hover:text-gray-900 transition-colors dark:text-gray-400 dark:hover:text-gray-100">
           <House size={20} />
         </a>
-        <h1 className="text-xl font-bold text-gray-900">Innkaupalisti</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Innkaupalisti</h1>
       </header>
 
       {items.length === 0 ? (
-        <p className="text-gray-500 text-sm">Your grocery list is empty.</p>
+        <p className="text-gray-500 text-sm dark:text-gray-400">Your grocery list is empty.</p>
       ) : (
         <>
           {Object.values(groups).map((group, gi) => (
             <div key={gi} className="mb-4">
               {group.title && (
-                <h2 className="text-sm font-medium text-gray-400 uppercase tracking-wide mb-2">
+                <h2 className="text-sm font-medium text-gray-400 uppercase tracking-wide mb-2 dark:text-gray-500">
                   {group.title}
                 </h2>
               )}
@@ -63,18 +63,18 @@ export default function GroceryList() {
                       onChange={() => handleToggle(item.id)}
                       aria-label={item.label}
                     />
-                    <span className="text-sm">{item.label}</span>
+                    <span className="text-sm dark:text-gray-300">{item.label}</span>
                   </label>
                 </div>
               ))}
             </div>
           ))}
 
-          <div className="flex gap-4 mt-6 pt-4 border-t border-gray-200">
+          <div className="flex gap-4 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
               aria-label="Clear done"
               onClick={handleClearDone}
-              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors cursor-pointer border-0 bg-transparent"
+              className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors cursor-pointer border-0 bg-transparent dark:text-gray-500 dark:hover:text-gray-300"
             >
               <CheckCheck size={15} />
               Clear done
@@ -82,7 +82,7 @@ export default function GroceryList() {
             <button
               aria-label="Clear all"
               onClick={handleClearAll}
-              className="flex items-center gap-1.5 text-sm text-red-400 hover:text-red-600 transition-colors cursor-pointer border-0 bg-transparent"
+              className="flex items-center gap-1.5 text-sm text-red-400 hover:text-red-600 transition-colors cursor-pointer border-0 bg-transparent dark:text-red-500 dark:hover:text-red-400"
             >
               <Trash2 size={15} />
               Clear all

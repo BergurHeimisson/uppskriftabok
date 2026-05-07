@@ -44,15 +44,15 @@ export default function Recipe() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
-      <Link to="/" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-4">
+      <Link to="/" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-4 dark:text-gray-500 dark:hover:text-gray-300">
         <ArrowLeft size={15} />
         Til baka
       </Link>
 
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{recipe.title}</h1>
-          {recipe.description && <p className="text-gray-500 mt-1">{recipe.description}</p>}
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{recipe.title}</h1>
+          {recipe.description && <p className="text-gray-500 mt-1 dark:text-gray-400">{recipe.description}</p>}
         </div>
         <Link
           to={`/recipe/${id}/edit`}
@@ -64,7 +64,7 @@ export default function Recipe() {
       </div>
 
       {recipe.prep_ahead_note && (
-        <div className="bg-amber-50 border-l-4 border-amber-400 rounded px-4 py-3 mb-4 text-sm">
+        <div className="bg-amber-50 border-l-4 border-amber-400 rounded px-4 py-3 mb-4 text-sm dark:bg-amber-900/20 dark:text-amber-200">
           <strong>[!] Start the day before:</strong> {recipe.prep_ahead_note}
         </div>
       )}
@@ -72,18 +72,18 @@ export default function Recipe() {
       <ServingScaler baseServings={recipe.servings} onChange={setServings} />
 
       <section className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">Hráefni</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-3 dark:text-gray-200">Hráefni</h2>
         <ul className="space-y-1.5 list-none p-0">
           {recipe.ingredients.map((ing, i) => (
             <li key={i} className="flex items-center gap-2">
               <div className="flex items-baseline gap-2 flex-1">
                 {ing.amount != null && (
-                  <span className="text-sm tabular-nums text-right min-w-8 shrink-0">
+                  <span className="text-sm tabular-nums text-right min-w-8 shrink-0 dark:text-gray-300">
                     {formatAmount(ing.amount * scale)}
                   </span>
                 )}
                 {ing.unit && (
-                  <span className="text-sm text-gray-400 min-w-6 shrink-0">{ing.unit}</span>
+                  <span className="text-sm text-gray-400 min-w-6 shrink-0 dark:text-gray-500">{ing.unit}</span>
                 )}
                 <span className="text-sm">{ing.item}</span>
               </div>
@@ -102,12 +102,12 @@ export default function Recipe() {
 
       {recipe.instructions && (
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-3">Punktar</h2>
-          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{recipe.instructions}</p>
+          <h2 className="text-lg font-semibold text-gray-800 mb-3 dark:text-gray-200">Punktar</h2>
+          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap dark:text-gray-300">{recipe.instructions}</p>
         </section>
       )}
 
-      <div className="mt-12 pt-6 border-t border-gray-100">
+      <div className="mt-12 pt-6 border-t border-gray-100 dark:border-gray-700">
         {!confirmDelete ? (
           <button
             onClick={() => setConfirmDelete(true)}
@@ -120,7 +120,7 @@ export default function Recipe() {
           </button>
         ) : (
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600">Eyða uppskrift?</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">Eyða uppskrift?</span>
             <button
               onClick={handleDelete}
               aria-label="Já, eyða"
@@ -133,7 +133,8 @@ export default function Recipe() {
               onClick={() => setConfirmDelete(false)}
               aria-label="Cancel"
               className="px-3 py-1.5 text-gray-500 rounded-full text-sm font-medium
-                         hover:bg-gray-100 transition-colors cursor-pointer border border-gray-200"
+                         hover:bg-gray-100 transition-colors cursor-pointer border border-gray-200
+                         dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-800"
             >
               Cancel
             </button>

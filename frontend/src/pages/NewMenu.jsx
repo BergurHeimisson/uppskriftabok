@@ -38,16 +38,16 @@ export default function NewMenu() {
     }
   }
 
-  const labelCls = 'block text-sm font-medium text-gray-700 mb-1'
-  const inputCls = 'w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400'
+  const labelCls = 'block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300'
+  const inputCls = 'w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100'
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-6">
-      <header className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+      <header className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
         <Link to="/menus" aria-label="Til baka" className="text-gray-500 hover:text-gray-900 transition-colors">
           <ArrowLeft size={20} />
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">Nýr matseðill</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Nýr matseðill</h1>
       </header>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -83,11 +83,11 @@ export default function NewMenu() {
             onChange={e => setSearch(e.target.value)}
             className={inputCls + ' mb-2'}
           />
-          <div className="flex flex-col gap-1 max-h-64 overflow-y-auto border border-gray-200 rounded-xl p-2">
+          <div className="flex flex-col gap-1 max-h-64 overflow-y-auto border border-gray-200 rounded-xl p-2 dark:border-gray-600">
             {filtered.map(r => (
               <label
                 key={r.id}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-gray-50 cursor-pointer text-sm"
+                className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-gray-50 cursor-pointer text-sm dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 <input
                   type="checkbox"
