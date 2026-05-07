@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Trash2, CheckCheck } from 'lucide-react'
+import { Trash2, CheckCheck, House } from 'lucide-react'
 import { getGroceryItems, toggleGroceryItem, clearCompletedGroceryItems, clearAllGroceryItems } from '../api'
 
 export default function GroceryList() {
@@ -33,7 +33,12 @@ export default function GroceryList() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Innkaupalisti</h1>
+      <header className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+        <a href="/" aria-label="Home" className="text-gray-500 hover:text-gray-900 transition-colors">
+          <House size={20} />
+        </a>
+        <h1 className="text-xl font-bold text-gray-900">Innkaupalisti</h1>
+      </header>
 
       {items.length === 0 ? (
         <p className="text-gray-500 text-sm">Your grocery list is empty.</p>
