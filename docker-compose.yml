@@ -71,6 +71,7 @@ services:
       - ./frontend/dist:/usr/share/nginx/html:ro
       - ../home-page/frontend/dist:/usr/share/nginx/home:ro
       - ../yr_wrapper/frontend/dist:/usr/share/nginx/vedur:ro
+      - ../fiche-de-lecture/web/dist:/usr/share/nginx/fiche:ro
     depends_on:
       - backend
       - auth-service
